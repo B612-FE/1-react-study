@@ -1,32 +1,70 @@
-# 1주차: react-study
+# Getting Started with Create React App
 
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-안녕하세요 프론트엔드 리드 **강나연**, **홍서현**입니다.
+## Available Scripts
 
-앞으로 스터디를 진행하기에 앞서, 자바스크립트나 리액트에 익숙하지 않으신 분들을 위해 강의를 듣고 개념을 정리하는 시간을 가지려 합니다.
+In the project directory, you can run:
 
-이미 리액트를 사용하시는 분들에게는 기본기를 다시 한 번 점검할 수 있는 시간이 될 것이라고 생각합니다.
+### `npm start`
 
-결과물을 만드는 미션이 아닌 만큼 온전히 개념에 집중해서 강의를 수강해 주세요. 
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-강의를 들으며 열심히 정리하고 이해하시는 만큼 많은 것을 얻어가실 수 있을 것 같습니다!
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-## 과제
+### `npm test`
 
-인프런에서 한입 크기로 잘라 먹는 리액트 강의를 들은 후 WIL을 작성합니다
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-이번 주차는 [섹션 5] - React에서 API 호출하기까지만 수강하시면 됩니다!
+### `npm run build`
 
-[한입 크기로 잘라 먹는 리액트(React.js) : 기초부터 실전까지 - 인프런 | 강의](https://www.inflearn.com/course/한입-리액트/dashboard)
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-## 마감 기한
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-~ 8월 3일 23시 55분
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## 참고 자료
+### `npm run eject`
 
-[모던 자바스크립트 입문](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=138287372)
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-[JavaScript | MDN](https://developer.mozilla.org/ko/docs/Web/JavaScript)
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-[JavaScript가 뭔가요? - Web 개발 학습하기 | MDN](https://developer.mozilla.org/ko/docs/Learn/JavaScript/First_steps/What_is_JavaScript)
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
