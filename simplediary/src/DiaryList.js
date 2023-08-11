@@ -1,8 +1,11 @@
 import DiaryItem from "./DiaryItem";
+import { useContext } from "react";
+import { DiaryDispatchContext, DiaryStateContext } from "./App";
 
 // Array를 props로 전달받을 때는 중괄호로 감싸야 한다.
-const DiaryList = ({ onEdit, onRemove, diaryList }) => {
-  console.log(diaryList);
+const DiaryList = () => {
+  const { onRemove, onEdit } = useContext(DiaryDispatchContext);
+  const diaryList = useContext(DiaryStateContext);
 
   return (
     <div className="DiaryList">
