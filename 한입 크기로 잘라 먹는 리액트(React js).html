@@ -1,0 +1,3241 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>한입 크기로 잘라 먹는 리액트(React.js)</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="57f2d1c6-9de7-4407-8b2f-3c88a8c0991b" class="page sans"><header><h1 class="page-title">한입 크기로 잘라 먹는 리액트(React.js)</h1><p class="page-description"></p><table class="properties"><tbody><tr class="property-row property-row-select"><th><span class="icon property-icon"><img src="https://www.notion.so/icons/alarm_gray.svg" style="width:14px;height:14px"/></span>상태</th><td><span class="selected-value select-value-color-blue">진행중</span></td></tr><tr class="property-row property-row-multi_select"><th><span class="icon property-icon"><svg role="graphics-symbol" viewBox="0 0 16 16" style="width:14px;height:14px;display:block;fill:rgba(55, 53, 47, 0.45);flex-shrink:0" class="typesMultipleSelect"><path d="M1.91602 4.83789C2.44238 4.83789 2.87305 4.40723 2.87305 3.87402C2.87305 3.34766 2.44238 2.91699 1.91602 2.91699C1.38281 2.91699 0.952148 3.34766 0.952148 3.87402C0.952148 4.40723 1.38281 4.83789 1.91602 4.83789ZM5.1084 4.52344H14.3984C14.7607 4.52344 15.0479 4.23633 15.0479 3.87402C15.0479 3.51172 14.7607 3.22461 14.3984 3.22461H5.1084C4.74609 3.22461 4.45898 3.51172 4.45898 3.87402C4.45898 4.23633 4.74609 4.52344 5.1084 4.52344ZM1.91602 9.03516C2.44238 9.03516 2.87305 8.60449 2.87305 8.07129C2.87305 7.54492 2.44238 7.11426 1.91602 7.11426C1.38281 7.11426 0.952148 7.54492 0.952148 8.07129C0.952148 8.60449 1.38281 9.03516 1.91602 9.03516ZM5.1084 8.7207H14.3984C14.7607 8.7207 15.0479 8.43359 15.0479 8.07129C15.0479 7.70898 14.7607 7.42188 14.3984 7.42188H5.1084C4.74609 7.42188 4.45898 7.70898 4.45898 8.07129C4.45898 8.43359 4.74609 8.7207 5.1084 8.7207ZM1.91602 13.2324C2.44238 13.2324 2.87305 12.8018 2.87305 12.2686C2.87305 11.7422 2.44238 11.3115 1.91602 11.3115C1.38281 11.3115 0.952148 11.7422 0.952148 12.2686C0.952148 12.8018 1.38281 13.2324 1.91602 13.2324ZM5.1084 12.918H14.3984C14.7607 12.918 15.0479 12.6309 15.0479 12.2686C15.0479 11.9062 14.7607 11.6191 14.3984 11.6191H5.1084C4.74609 11.6191 4.45898 11.9062 4.45898 12.2686C4.45898 12.6309 4.74609 12.918 5.1084 12.918Z"></path></svg></span>태그</th><td></td></tr></tbody></table></header><div class="page-body"><h3 id="a32958dd-f3da-4759-9807-c6c05572690c" class="">Section 1. Javascript 기본</h3><p id="8b14b0ba-6811-483d-b62a-89bb6fa36bd5" class="">
+</p><figure id="da5d79c1-b8c8-41cc-9c81-f7823d92768b" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled.png"/></a></figure><p id="6b115592-e7c2-4bb7-92fe-318f52dd041c" class="">
+</p><p id="9cac2771-0d7d-4eda-b02c-c03a4e6d5160" class="">실습 환경으로 Chrome 브라우저를 사용한다. </p><p id="7c7b8e02-38af-42d8-a12f-c89e02e75a4b" class="">MacOS 기준 DevTools 단축키 : ‘cmd + opt + i ‘</p><p id="0898c429-46a5-4819-a9c0-40fec52a4404" class="">
+</p><p id="61fea711-9dfe-4e82-ad22-c3564bfb2078" class="">또한 CodeSandbox를 사용하여 작업을 진행한다. </p><p id="560232ba-a47e-4008-b54b-f9e0cb9fb78a" class="">이후 실습은 CodeSandbox에서 활용하여 진행한다. </p><p id="d73c26c3-61f4-416b-98e5-979bd2d68e2a" class="">
+</p><pre id="89770ec4-be65-4af0-9c7f-02ec6f0999aa" class="code"><code>// 변수 
+let age = 25;
+console.log(age);
+
+age = 30;
+console.log(age);
+
+// 변수명을 짓는 규칙 
+// 1. _와 $ 이외의 기호는 사용할 수 없다.
+// 2. 숫자는 사용가능하나 문자로 시작해야한다.
+// 3. 예약어는 사용할 수 없다. 
+
+var age1 = 25;
+console.log(age1);
+
+// var로 변수를 선언하는 경우 변수 재선언이 가능하다.
+// 이는 향후 코드라인이 길어질 경우 문제가 생길 여지가 있다. 
+// let의 경우 변수 재선언을 방지할 수 있다.</code></pre><p id="a0b6b1ea-b74a-47e4-ab6e-7fdbfb0aecea" class="">
+</p><pre id="00f1e364-4a7c-425c-833a-7f60472f123f" class="code"><code>// 상수
+const age = 25;
+console.log(age);
+
+// 상수의 경우 선언과 동시에 할당이 이루어져야 한다.</code></pre><p id="ce45faa1-0049-49fc-8611-f8f299f903aa" class="">
+</p><figure id="e8ac0dfd-2adc-49f6-af65-af95e61e441e" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%201.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%201.png"/></a></figure><p id="b47fdb95-befd-475a-9724-dbed1f2dd696" class="">
+</p><p id="d2fbb9e8-73eb-4b23-bd14-ebf79eef48b6" class="">Javascript의 자료형은 Primitive type 5개, Non-Primitive 3개로 구성되어 있다. </p><p id="1a68213a-a326-45da-8a51-85823f53930e" class="">
+</p><figure id="3083febc-3f8d-473c-b2b8-9f2fb21042a7" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%202.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%202.png"/></a></figure><p id="2a1a0117-2238-4072-9040-6fdc09256914" class="">
+</p><pre id="69fbaddf-9621-497b-9e17-a39bdcdd8d4e" class="code"><code>// Number
+let age = 25; // 정수
+
+let height = 180; // 실수 
+
+console.log(age+height);
+
+// 예약어 3인방
+let inf = Infinity;
+
+let minusInf = -Infinity;
+
+let nan = NaN;</code></pre><p id="3d1ab1d2-d028-4344-aa7c-2baa59e37dc3" class="">
+</p><pre id="5113cf7a-d17c-4e78-b301-663f1a9dc381" class="code"><code>// String
+let name = &quot;Kwak&quot;;
+
+let name2 = &#x27;Kwak&#x27;;
+
+let name3 = `Kwak ${name2}`; // 백틱 사용 시 문자열 리터럴 사용 가능</code></pre><p id="0f99dc91-617b-4973-98e2-1b43cfc0f3fb" class="">
+</p><pre id="ad89111c-aba6-47c5-91fd-4c20e8d9b03f" class="code"><code>// Bolean
+let F = false;
+
+let T = true;</code></pre><p id="a1598e35-b662-45a5-bb5f-35c5d27a5279" class="">
+</p><pre id="55240b52-7bc4-4aaa-b635-dc31054b469f" class="code"><code>// Null
+let a = null;
+
+console.log(a);</code></pre><p id="ab073d48-2f54-46d0-aab3-59c51ce6d351" class="">
+</p><pre id="62201b07-e630-496a-b848-6c643393aea7" class="code"><code>//undifined
+let variable;
+
+console.log(variable);</code></pre><p id="d057bba5-5592-4601-b7a7-53f4a8bb118f" class="">
+</p><pre id="25bcc412-0b25-4a64-b56f-26d9ccfcb44d" class="code"><code>// 묵시적 형변환(casting)
+let numberA = 12;
+
+let numberB = &quot;2&quot;;
+
+console.log(numberA * numberB); // 24(Number)
+
+let numberA = 12;
+
+let numberB = &quot;2&quot;;
+
+console.log(numberA + numberB); // 122(String)
+// 명시적 형변환
+let numberA = 12;
+
+let numberB = &quot;2&quot;;
+
+console.log(numberA + parseInt(numberB)); // 14(Number)</code></pre><p id="d6ef7dda-7568-43da-9519-067a10c6fa53" class="">
+</p><pre id="42250fc9-e07f-47a4-b549-4a38fd9370b5" class="code"><code>// 대입 연산자 : =
+let a = 1;
+
+// 사칙 연산자 : +, -, *, /, % 
+let b = 2;
+
+console.log(a + b);
+
+// 연결 연산자 : +
+let c = &quot;2&quot;;
+
+console.log(a + c); // 12
+
+// 복합 연산자 
+let d = 5;
+
+d += 5;
+console.log(d);
+
+// 증감 연산자
+// 변수의 앞에 붙이는 경우와 뒤에 붙이는 경우의 결과가 다르다.
+let e = 10;
+
+e++; // 11
+console.log(e);
+
+// 논리 연산자
+console.log(!true); // ! : Not 
+console.log(true &amp;&amp; true) // &amp;&amp; : 피연산자가 둘다 참인 경우 true 반환
+console.log(true || false) // || : 피연산자가 둘중 하나 이상 참인 경우 true 반환
+
+// 비교 연산자 
+let compareA = 1 == &quot;1&quot;; // 값만 비교 
+console.log(compareA); // true 
+
+let compareB = 1 === &quot;1&quot;; // 값과 자료형 모두 비교
+console.log(compareB); // false
+
+let compareC = 2 &gt;= 2;
+console.log(compareC); // true
+
+// 널 병합 연산자
+let f;
+
+f = f ?? 10;
+console.log(f);</code></pre><p id="8baf1d49-8ce1-4147-869b-2189fa9823a8" class="">
+</p><pre id="f351ec9c-752d-4789-a735-f883c17b369b" class="code"><code>// 조건문 1
+let a = 3;
+
+if(a &gt;= 7) {
+  console.log(&quot;7 이상입니다.&quot;);
+} else if(a &gt;= 5) {
+  console.log(&quot;5 이상입니다.&quot;)
+} else {
+  console.log(&quot;5 미만입니다.&quot;)
+}
+
+// 조건문 2
+let country = &quot;ko&quot;;
+
+switch(country){
+  case &quot;ko&quot; :
+    console.log(&quot;한국&quot;);
+    break;
+  case &quot;cn&quot; :
+    console.log(&quot;중국&quot;);
+    break;
+  case &quot;jp&quot; :
+    console.log(&quot;일본&quot;);
+    break;
+  default:
+    console.log(&quot;미분류&quot;);
+    break;
+}</code></pre><p id="3f16d9d7-57b5-4101-a8ec-d48354bb351f" class="">
+</p><pre id="365a5771-f7e3-4bd8-a157-ba79569e2fb2" class="code"><code>// 함수
+function getArea(width, heihgt){
+  let area = width * heihgt;
+  return area;
+} 
+// 함수 선언식
+// 함수 내부에서 선언된 지역변수는 함수 외부에서 접근 불가
+
+let area1 = getArea(100, 200); // 100 * 200
+console.log(&quot;area1: &quot;, area1 );
+console.log(&quot;함수 실행 완료&quot;);</code></pre><p id="06a6d6d9-942b-4016-9fac-a809d510064a" class="">
+</p><pre id="634e5738-c76e-4ff1-9f26-83965dadb73f" class="code"><code>// 함수 표현식 
+function helloB(){
+  return &quot;안녕하세요 여러분&quot;;
+} // 함수 선언식: 호이스팅 O
+
+let helloA = function(){
+  return &quot;안녕하세요 여러분&quot;;
+}; // 함수 표현식: 호이스팅 X
+
+console.log(helloA);
+
+const helloText = helloA();
+console.log(helloText);</code></pre><p id="e6a80844-382b-4eb4-bf2a-54d67376ae6d" class="">
+</p><pre id="90a84517-ce1c-47db-b76f-b80d56a39f83" class="code"><code>// 화살표 함수: 무명 함수를 간단하게 만드는 방법
+let helloA = () =&gt; &quot;안녕하세요 여러분&quot;
+
+
+console.log(helloA);</code></pre><p id="953d4294-dc9e-4215-b54d-824045e9fc8a" class="">
+</p><pre id="85db7a73-2c0a-4422-934f-698fac34b4fd" class="code"><code>// 콜백 함수: 다른 함수의 매개변수로 함수를 전달하는 방식
+function checkMod (mood, goodCallback, badCallback){
+  if(mood===&quot;good&quot;){
+    // 기분이 좋을 때 하는 동작
+    goodCallback(); // 전달 받은 함수를 호출
+  } else {
+    // 기분이 안좋을 때 하는 동작
+    badCallback(); // 전달 받은 함수를 호출
+  }
+}
+
+function cry(){
+  console.log(&quot;ACTION :: CRY&quot;);
+}
+
+function sing(){
+  console.log(&quot;ACTION :: SING&quot;);
+}
+
+function dance(){
+  console.log(&quot;ACTION :: DANCE&quot;);
+}
+
+checkMod(&quot;good&quot;, sing, cry);</code></pre><p id="85cfa0d2-1e03-479f-b222-8d18fd68d53f" class="">
+</p><pre id="d024bef4-5231-44ff-a5bc-ce5801191b26" class="code"><code>// 객체: Object
+let person = {
+  key1: &quot;value1&quot;, // 프로퍼티(객체 프로퍼티)
+  key2: &quot;value2&quot;,
+  key3: true,
+  key4: [1, 2],
+  key5: function(){}
+}; 
+// 객체 리터럴 방식
+// key는 반드시 문자열 사용
+
+console.log(person.key1); // 점 표기법
+console.log(person[&quot;key2&quot;]); // 괄호 표기법
+
+function getPropertyValue (key){
+  return person[key];
+}
+
+console.log(getPropertyValue(&quot;key3&quot;));
+
+let personA = {
+  name: &quot;Kwak&quot;, // 멤버
+  age: 28, // 멤버
+  say: function (){
+    console.log(`안녕 나는 ${personA[&quot;name&quot;]}` );
+  } // 메서드
+};
+// 객체는 상수로 선언해도 문제없이 수정, 삭제 가능
+
+personA.location = &quot;서울&quot;;
+personA[&quot;gender&quot;] = &quot;Male&quot;;
+
+personA.name = &quot;곽성재&quot;;
+
+delete personA.age;
+personA.location = null; // 이 방식을 추천
+
+console.log(personA);
+
+personA.say();
+
+console.log(`name: ${&quot;name&quot; in personA}`) // 객체 프로퍼티 존재 확인</code></pre><p id="090698cf-99a3-4708-a770-6aa6380b5cbc" class="">
+</p><pre id="53077513-c182-441b-bde5-9b88c7f038b0" class="code"><code>// 배열
+let arr = [1, 2, 3, 4, 5]; // 배열 리터럴
+console.log(arr);
+// 0: 1
+// 1: 2
+// 2: 3
+// 3: 4
+// 4: 5 
+
+arr.push(6);
+console.log(arr.length);</code></pre><p id="ecbf0302-4094-4350-8310-597bf03b3a48" class="">
+</p><pre id="d81c4402-eeb3-4206-b66f-45d000ebc682" class="code"><code>// 반복문
+for (let i = 1; i &lt;= 100; i++) { // (초기식; 조건식; 증감식)
+  // 반복 수행할 명령
+  console.log(&quot;Kwak&quot;);
+}
+
+const arr = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;];
+for (let i=0; i&lt;arr.length; i++){
+  console.log(arr[i]);
+}
+
+let person = {
+  name: &quot;Kwak&quot;,
+  age: 25,
+  height: 180
+};
+
+const personKeys = Object.keys(person);
+// const personValues = Object.values(person);
+for (let i=0; i&lt;personKeys.length; i++){
+  const curKey = personKeys[i];
+  const curValue = person[curKey];
+
+  console.log(`Key: ${curKey}, Value: ${curValue}`);
+}</code></pre><p id="165f4c0c-b1b4-4981-b788-b78b7a9a2e57" class="">
+</p><pre id="8e2cdb12-ed7c-4ef5-a51d-729e57412d9b" class="code"><code>// 배열 내장함수
+
+const arr = [1, 2, 3, 4]
+
+// forEach
+const newArr1 = [];
+arr.forEach((elm) =&gt; newArr1.push(elm*2));
+console.log(newArr1);
+
+// map
+const newArr2 = arr.map((elm) =&gt; {return elm*3});
+console.log(newArr2)
+
+// includes: boolean 반환
+// indexOf : index 반환
+let number = 3;
+console.log(arr.includes(number));
+console.log(arr.indexOf(number));
+
+// findInde: 찾고자하는 값의 인덱스 반환
+const arr1 = [
+  {color: &quot;red&quot;},
+  {color: &quot;black&quot;}
+];
+console.log(arr1.findIndex((elm) =&gt; elm.color === &quot;red&quot;));
+
+// find: 찾고자하는 값의 element 반환
+console.log(arr1.find((elm) =&gt; elm.color === &quot;red&quot;));
+
+// filter: 찾고자하는 값의 element를 배열로 반환
+const arr2 = [
+  {num:1, color: &quot;red&quot;},
+  {num:2, color: &quot;black&quot;}
+];
+console.log(arr2.filter((elm) =&gt; elm.color === &quot;black&quot;));
+
+// slice: (시작 index, 끝 index -1)
+console.log(arr.slice(0, 3))
+
+// concat: 앞에 배열에 뒤 배열 연결 
+console.log(arr.concat(arr1));
+
+// sort: 사전 순으로 정렬(문자열 기준, 원본 배열을 변형)
+let chars = [&quot;다&quot;, &quot;나&quot;, &quot;가&quot;, &quot;라&quot;];
+chars.sort();
+console.log(chars);
+
+// 숫자 정렬 기법
+let numbers = [0, 1, 3, 2, 14, 20, 30];
+
+const compare = (a, b) =&gt; {
+  // 1. 같다
+  // 2. 크다
+  // 3. 작다
+
+  if (a &gt; b) {
+    //크다
+    return 1;
+  }
+
+  if (a &lt; b) {
+    //작다
+    return -1;
+  }
+
+  // 같다
+  return 0;
+}
+
+// join: 문자열을 구분자를 포함하여 연결
+const hello = [&quot;안녕&quot;, &quot;하세요&quot;];
+console.log(hello.join(&quot;===&quot;)) // 안녕===하세요</code></pre><p id="d78d9da0-f597-4694-98d6-d677038f87bf" class="">
+</p><h3 id="cf048363-8e39-4a11-9d77-37a09371da83" class="">Section 2. Javascript 응용</h3><p id="2855a1c3-d529-4f25-8286-022037fa50e9" class="">
+</p><pre id="5c4dfd69-58c6-4e2c-93b0-92466d1cc0c0" class="code"><code>// Truthy &amp; Falsy
+// Falsy: null, undifined, 0, NaN, &quot;&quot; ...
+// Truthy: Falsy를 제외한 나머지 
+const getName = (person) =&gt; {
+  if (!person){
+    return &quot;객체가 아닙니다.&quot;;
+  }
+  return person.name;
+}
+
+let person = {name: &quot;Kwak&quot;};
+const name = getName(person);
+console.log(name);</code></pre><p id="699a0369-636a-4d55-9d1a-20b875f0e3d9" class="">
+</p><pre id="52cd4b43-ec2c-46f1-8cd7-12b9f4362ea4" class="code"><code>// 삼항 연산자
+let a = 3;
+a &gt;= 0 ? console.log(&quot;양수&quot;) : console.log(&quot;음수&quot;);
+
+let arr = [];
+const arrStatus = arr.length ? &quot;안 빈 배열&quot; : &quot;빈 배열&quot;;
+console.log(arrStatus);
+
+// 학점 계산 프로그램(중첩 삼항 연산자)
+// 90점 이상 A+
+// 50점 이상 B+
+// 둘다 아니면 C+
+let score = 100;
+
+const grade = score &gt;= 90 ? &quot;A+&quot; : score &gt;= 50 ? &quot;B+&quot; : &quot;C+&quot;;
+console.log(grade);</code></pre><p id="db844bbd-5b9e-4ece-9076-0531ae0efa5a" class="">
+</p><pre id="0faab2a0-f60e-4d90-a9c4-88f2d7290f46" class="code"><code>// 단락 회로 평가
+const getName = (person) =&gt; {
+  // if(!person){
+  //   return &quot;객체가 아닙니다.&quot;
+  // }
+  // return person.name;
+  const name = person &amp;&amp; person.name; // Kwak
+  return name || &quot;객체가 아닙니다.&quot; // truthy || 
+}
+
+let person = { name : &quot;Kwak&quot;};
+const name = getName(person);
+console.log(name);</code></pre><p id="fe0a13f0-f572-4340-8024-4c62463db01a" class="">
+</p><pre id="65f4ffed-e097-4eb5-a0de-dbdcb0cbf08b" class="code"><code>// 조건문 업그레이드
+const meal = {
+  한식 : &quot;불고기&quot;,
+  중식 : &quot;멘보샤&quot;,
+  일식 : &quot;초밥&quot;
+}
+const getMeal = (mealType) =&gt; {
+  return meal[mealType] || &quot;굶기&quot;;
+}
+
+console.log(getMeal(&quot;한식&quot;));</code></pre><p id="f0755717-30bc-448b-8b6f-94ef67c27442" class="">
+</p><pre id="9a432c18-75a7-47fa-a358-7e9c40f70e9c" class="code"><code>// 비 구조화 할당(구조분해 할당)
+// 배열
+let arr = [&quot;one&quot;, &quot;two&quot;, &quot;three&quot;]
+
+let [one, two, three, four] = arr;
+console.log(one, two, three, four); // one two three undifined
+
+let a = 10;
+let b = 20;
+[a, b] = [b, a]
+console.log(a, b) // 20 10
+
+// 객체
+let object = {  
+  first: &quot;first&quot;,
+  second: &quot;second&quot;,
+  third: &quot;third&quot;,
+  name: &quot;Kwak&quot;
+}
+
+let {second, third, name: myName} = object; // 순서가 아닌 key 값을 기준으로 접근
+console.log(second, third, myName)</code></pre><p id="a4e2e97d-6d09-4866-9d32-540f603bb561" class="">
+</p><pre id="0e3e5348-cbd1-40c3-8b3e-5124b8f3c228" class="code"><code>// spread 연산자
+// 객체
+const cookie = {
+  base: &quot;cookie&quot;,
+  madeIn: &quot;korea&quot;
+}
+
+const chocochipCookie = {
+  ...cookie,
+  toping: &quot;chocochip&quot;
+}
+
+console.log(chocochipCookie);
+
+// 배열
+const noTopingCookies = [&quot;촉촉한쿠키&quot;, &quot;안촉촉한쿠키&quot;];
+const topingCookies = [&quot;바나나쿠키&quot;, &quot;블루베리쿠키&quot;];
+
+const allCookies = [...noTopingCookies, ...topingCookies];
+console.log(allCookies);</code></pre><p id="b8d0e68c-8c7f-4e22-b071-f02180fe1f35" class="">
+</p><ul id="db40e839-3262-4527-a966-c480163b339b" class="bulleted-list"><li style="list-style-type:disc">동기 &amp; 비동기</li></ul><p id="feb50e40-efa9-4fc6-81dc-a1f5e2c8fa37" class="">
+</p><figure id="5bb77816-0ee7-4888-9258-0ecc5761e6dd" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%203.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%203.png"/></a></figure><p id="ebb37f1c-b630-432c-a729-08211f3ebed3" class="">
+</p><figure id="13521bba-885a-4e96-8c3a-81aa6bf20ab3" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%204.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%204.png"/></a></figure><p id="728cfb75-b026-4805-88d9-b3b3e2157d89" class="">
+</p><figure id="583bdd7b-b600-41a3-94c9-a4022ee5d73d" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%205.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%205.png"/></a></figure><p id="38064c67-2bd0-41ac-80c8-1a5127bca936" class="">
+</p><figure id="8cd387fa-7744-4db8-8391-627225decdb1" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%206.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%206.png"/></a></figure><p id="76d1161d-393c-4ffc-8290-e17831981818" class="">
+</p><figure id="0e171de7-3aab-4862-b91e-ef4df072383d" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%207.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%207.png"/></a></figure><p id="d9dc2aec-eb79-4582-9c28-f57a0c582a9c" class="">
+</p><figure id="56c9105b-23d7-48dc-8918-8d7a800859d5" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%208.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%208.png"/></a></figure><p id="e8393c53-3d6a-4474-b912-ea1f8ae06523" class="">
+</p><pre id="2801010e-86f8-4db5-9140-02e381eeb217" class="code"><code>function taskA(a, b, cb) {
+  setTimeout(() =&gt; {
+    const res = a + b;
+    cb(res);
+  }, 3000);
+}
+
+function taskB(a, b, cb) {
+  setTimeout(() =&gt; {
+    const res = a + b;
+    cb(res);
+  }, 2000);
+}
+
+taskA(3, 4, (res) =&gt; console.log(&quot;A TASK RESULT : &quot;, res));
+taskB(2, 4, (res) =&gt; console.log(&quot;B TASK RESULT : &quot;, res));
+console.log(&quot;Code End&quot;);
+
+// 순서
+// Code End
+// B TASK RESULT
+// A TAST RESULT</code></pre><p id="d95a93f4-e428-4684-87b2-937d4984506d" class="">
+</p><figure id="1b2d4a30-bcb8-4502-ada8-b169ed78bb7f" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%209.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%209.png"/></a></figure><p id="7453f86a-e937-4805-863e-db3f74c7812f" class="">
+</p><figure id="a7409ed2-9bb2-4185-b69f-abdfa72eff50" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2010.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2010.png"/></a></figure><p id="0bbe184c-fb30-4188-9d40-69c32f2eb31f" class="">
+</p><pre id="777b8984-6f24-4d24-a895-e11fd1e9f65a" class="code"><code>function taskA(a, b, cb) {
+  setTimeout(() =&gt; {
+    const res = a + b;
+    cb(res);
+  }, 3000);
+}
+
+function taskB(a, cb) {
+  setTimeout(() =&gt; {
+    const res = a * 2;
+    cb(res);
+  }, 1000);
+}
+
+function taskC(a, cb) {
+  setTimeout(() =&gt; {
+    const res = a * -1;
+    cb(res);
+  }, 2000);
+}
+
+taskA(3, 4, (a_res) =&gt; {
+  console.log(&quot;A TASK RESULT: &quot;, a_res);
+  taskB(a_res, (b_res) =&gt; {
+    console.log(&quot;B TASK RESULT: &quot;, b_res);
+    taskC(b_res, (c_res) =&gt; {
+      console.log(&quot;C TASK RESULT: &quot;, c_res);
+    });
+  });
+});
+//A TASK RESULT: 9
+//B TASK RESULT : 18
+//C TASK RESULT : -18</code></pre><p id="e9225dd9-797d-4026-9d9f-a752cfe4404b" class="">
+</p><ul id="c763c433-1a68-47d4-9ead-6af4213ad333" class="bulleted-list"><li style="list-style-type:disc">Promise: 콜백 지옥을 해결하자 !</li></ul><p id="0e40048d-5af1-4516-8e54-79a0a2e8e41c" class="">
+</p><figure id="6e227e0c-f698-4769-a90a-02aeff99f30d" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2011.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2011.png"/></a></figure><p id="c25853a1-c94c-4f7f-ba33-26014d7108df" class="">
+</p><pre id="49c03f1b-da6b-49ad-a948-17211b79de3c" class="code"><code>function isPositive(number, resolve, reject){
+  setTimeout(() =&gt; {
+    if(typeof number === &quot;number&quot;){
+      // 성공 -&gt; resolve
+      resolve(number &gt;= 0 ? &quot;양수&quot; : &quot;음수&quot;);
+    } else{
+      // 실패 -&gt; reject
+      reject(&quot;주어진 값이 숫자형 값이 아닙니다.&quot;)
+    }
+  }, 2000)
+}
+
+isPositive(10, (res) =&gt; {
+  console.log(&quot;성공적으로 수행됨 :&quot;, res);
+}, (err)=&gt; {
+  console.log(&quot;실패하였음&quot;, err);
+})
+
+// Promise 객체 활용
+function isPositiveP(number) {
+  const executor = (resolve, reject) =&gt; {
+    //실행자
+    setTimeout(() =&gt; {
+      if (typeof number === &quot;number&quot;) {
+        //성공 -&gt; resolve
+        console.log(number);
+        resolve(number &gt;= 0 ? &quot;양수&quot; : &quot;음수&quot;);
+      } else {
+        //실패 -&gt; reject
+        reject(&quot;주어진 값이 숫자형 값이 아닙니다.&quot;);
+      }
+    }, 2000);
+  };
+
+  const asyncTask = new Promise(executor); 
+// 프로미스 객체 생성 &amp; 비동기 함수의 실질적인 실행자 함수 executor를 넘겨줌 
+// -&gt; 자동으로 executor함수가 실행 됨
+  return asyncTask; // Promise 객체 반환
+}
+
+const res = isPositiveP(101); //101
+
+res
+  .then((res) =&gt; {
+    console.log(&quot;작업성공 : &quot;, res);
+  })
+  .catch((err) =&gt; {
+    console.log(&quot;작업 실패 : &quot;, err);
+  });</code></pre><p id="01076777-8bb8-4e5a-bfdd-4a858e3a76cb" class="">
+</p><pre id="f47ebb32-9492-40f6-80a4-2d58cc5ecc22" class="code"><code>// 콜백 지옥 해결하기: 반복 숙달하기
+function taskA(a, b) {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      const res = a + b;
+      resolve(res);
+    }, 3000);
+  });
+}
+
+function taskB(a) {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      const res = a * 2;
+      resolve(res);
+    }, 1000);
+  });
+}
+
+function taskC(a) {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      const res = a * -1;
+      resolve(res);
+    }, 2000);
+  });
+}
+
+taskA(5, 1)
+  .then((a_res) =&gt; {
+    console.log(&quot;A RESULT : &quot;, a_res);
+    return taskB(a_res);
+  }) // Promise 객체 반환
+  .then((b_res) =&gt; {
+    console.log(&quot;B RESULT : &quot;, b_res);
+    return taskC(b_res);
+  }) // Promise 객체 반환
+  .then((c_res) =&gt; {
+    console.log(&quot;C RESULT : &quot;, c_res);
+  });
+// then Chaining
+
+//A RESULT : 6
+//B RESULT : 12
+//C RESULT : -12</code></pre><p id="1c67f001-e093-4357-8c62-15ccc3726526" class="">
+</p><ul id="bdf913b9-d5a3-4c9b-a0c2-60844bfeb95f" class="bulleted-list"><li style="list-style-type:disc">async &amp; await</li></ul><p id="b37aeda1-995f-4145-9890-4a57461ed5d2" class="">
+</p><pre id="3f7fffbf-1390-446e-93dc-ba1f55c0b34c" class="code"><code>// async
+// 동기 함수
+function hello() {
+  return &quot;hello&quot;;
+}
+// 비동기 함수: Promise 객체로 반환
+async function helloAsync1() {
+  return &quot;hello Async1&quot;; 
+}
+
+console.log(hello());
+
+helloAsync1().then((res) =&gt; {
+  console.log(res)
+});
+
+// 응용: 반복 숙달 !
+function delay(ms) {
+  return new Promise((resolve)=&gt; {
+    setTimeout(resolve, ms);
+  })
+}
+
+async function helloAsync2() {
+  // return delay(2000).then(()=&gt; {return &quot;hello Async2&quot;});
+  await delay(2000); // await 는 비동기 함수에서만 사용 가능 
+  return &quot;hello Async2&quot;;
+}
+
+helloAsync2().then((res)=&gt; console.log(res));</code></pre><p id="c84f0b3a-0f7b-452d-864a-82598d9885a0" class="">
+</p><ul id="471a7bfa-aba9-4e68-ba0e-af879f8683dc" class="bulleted-list"><li style="list-style-type:disc">API </li></ul><p id="cf7aaa58-c4be-47e5-8f3e-c8b73a356d11" class="">
+</p><figure id="0a773bea-bfb7-4b80-9a53-249fee28c266" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2012.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2012.png"/></a></figure><p id="fe090d07-d461-47b1-9e1d-035cde21c2b1" class="">
+</p><figure id="c0589a44-0883-4fea-9e0c-8601b0aff4fc" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2013.png"><img style="width:2341px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2013.png"/></a></figure><p id="4c0d661b-6c66-470e-a3aa-60bd79873b5d" class="">
+</p><figure id="191a14f6-36b1-4add-9803-09b9bd3f536c" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2014.png"><img style="width:1090px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2014.png"/></a></figure><p id="33be2c67-654e-4c00-b23b-bf64fc615633" class="">
+</p><pre id="d2c123a5-5c30-4576-b406-b0d61cf52de3" class="code"><code>// API 사용법 기초
+// fetch: api 주소로부터 데이터를 받고, Promise 객체 반환
+let response = fetch(&#x27;api 주소&#x27;).then((res)=&gt;{
+	console.log(res);
+});
+
+async function getData() {
+	let rawResponse = await fetch(&#x27;api 주소&#x27;);
+	let jsonResponse = await rawResponse.json();
+	console.log(jsonResponse);
+}
+
+getData();</code></pre><p id="960fb582-6e00-4a5b-b1e3-02c4fb9b857d" class="">
+</p><h3 id="eb7cf591-84bf-4b74-906c-abfcb42fb22c" class="">Section 3. Node.js 기초</h3><p id="7e7d2d33-3b86-4542-b2e8-c2aa5813d540" class="">
+</p><figure id="863545ce-d707-425a-b076-02d8b213b13e" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2015.png"><img style="width:1275px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2015.png"/></a></figure><p id="e2fd8041-6b92-49fb-abf8-8cba414f7409" class="">
+</p><ul id="589cb4e2-fed4-47cc-acdd-5b4cc84bd1cf" class="bulleted-list"><li style="list-style-type:disc">Node.js 설치 </li></ul><ul id="67c4a321-d0ec-432e-8f02-42e53b34f1d1" class="bulleted-list"><li style="list-style-type:disc">VSCode 설치</li></ul><ul id="3476f586-d3c5-46bf-94e1-f9579bed1b89" class="bulleted-list"><li style="list-style-type:disc">VSCode Extention 설치: 
+1. Prettier 설치 &gt; cmd + shift + p &gt; format on save &gt; check
+2. Material Icon Theme 설치</li></ul><p id="638316ab-b8a2-4b2e-bc48-380c96086816" class="">
+</p><figure id="4539cc0f-8634-4569-b136-5443430940a5" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2016.png"><img style="width:1717px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2016.png"/></a></figure><p id="baf417ac-d1c6-4d8b-a687-e0f14fc2798d" class="">
+</p><figure id="c126084c-83cb-4bd0-bbd8-12e9e79d9d42" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2017.png"><img style="width:1709px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2017.png"/></a></figure><p id="e04f798e-1302-45cb-84d7-0fd9a3cb89d9" class="">
+</p><ul id="1c7872b7-a726-4842-9a08-ef2e799ca9a6" class="bulleted-list"><li style="list-style-type:disc">Node.js에서 Hello World 출력하기</li></ul><ol type="1" id="b1b09a86-785c-496f-a7c3-7c07204580ec" class="numbered-list" start="1"><li>index.js 파일 생성</li></ol><ol type="1" id="42155ac5-5d8e-406c-89ed-df53761d2d0b" class="numbered-list" start="2"><li>명령어 입력</li></ol><ol type="1" id="2ce7f071-61ee-4b06-9aeb-1755a4b71759" class="numbered-list" start="3"><li>VSCode 에서 cnt + ` :  터미널 열기 </li></ol><ol type="1" id="de62ff87-1d49-4dd3-b3ec-75997dd47033" class="numbered-list" start="4"><li>&gt; node index.js </li></ol><p id="868f991d-dc69-423e-aaea-7f9e7e964808" class="">
+</p><ul id="e6cb159c-1953-42f5-85a1-e709dd4ca9f5" class="bulleted-list"><li style="list-style-type:disc">모듈 내보내기(CommonJS): module.exports &amp; require 사용 (Node.js 에서만 사용 가능)</li></ul><figure id="91430593-8f7e-4b40-92db-99510896bb17" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2018.png"><img style="width:1854px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2018.png"/></a></figure><p id="a8c83063-f073-4a64-9450-5a0d46366bff" class="">
+</p><ul id="b7ce6248-bf68-4b22-af12-c5c7832d9ea3" class="bulleted-list"><li style="list-style-type:disc">Node.js 패키지 생성 및 외부 패키지 사용하기</li></ul><figure id="3fb2e434-af13-40e9-be03-7ed4d3c9e016" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2019.png"><img style="width:580px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2019.png"/></a></figure><p id="b06cc833-af54-4f29-b47f-8e99671b9bda" class="">
+</p><ol type="1" id="f318ae13-c477-4817-9705-df0bfa39753d" class="numbered-list" start="1"><li>Terminal &gt; npm init: package 초기화 </li></ol><ol type="1" id="87b1aecf-7e3e-4d36-80af-d1f28884eb5d" class="numbered-list" start="2"><li>package.json &gt; scripts에 “starts” : “node index.js” 추가</li></ol><ol type="1" id="f6068f34-20e8-450d-bf3a-e192fd42fc6d" class="numbered-list" start="3"><li>index.js 파일 생성</li></ol><ol type="1" id="4e462458-6d70-466a-a748-2062d6e20d4b" class="numbered-list" start="4"><li>Terminal &gt; npm start : index.js 실행</li></ol><p id="c86845f7-0069-4adf-9095-0a9c11cf21e4" class="">
+</p><ul id="acf36658-1597-416b-ab3f-c1d4cac3b459" class="bulleted-list"><li style="list-style-type:disc">Chrome &gt; npmjs 검색 : 다양한 오픈 소스 package 사용 가능</li></ul><ol type="1" id="aa67dbcf-4597-4574-b21c-284d1fd00c11" class="numbered-list" start="1"><li>Terminal &gt; npm install 패키지명 : package 설치</li></ol><ol type="1" id="de734271-5926-4674-b680-8c5b3d38bbcc" class="numbered-list" start="2"><li>package.json &gt; dependencies에서 package 설치 확인</li></ol><p id="8e14a7b7-be49-4f25-bbd1-0e984c3e90bc" class="">
+</p><h3 id="666666a1-35d6-4806-b8cf-ab67a45ed988" class="">Section 4. React.js 기초</h3><p id="7eae68d6-d4d6-4ff9-94c9-3e515e99e2b7" class="">
+</p><figure class="block-color-teal_background callout" style="white-space:pre-wrap;display:flex" id="ac8c7da2-dafa-4a59-9dd4-85ed72d580ad"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">React는 Component 기반의 UI 라이브러리 😎</div></figure><p id="657accaf-1590-486f-abf1-8d6d389d005f" class="">
+</p><ol type="1" id="0aad56f4-ec75-4222-90b1-9afd4914ff91" class="numbered-list" start="1"><li>중복 코드 작성으로 인한 유지보수 문제 해결</li></ol><figure id="0513001a-ddaa-40c2-b660-2eb509442347" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2020.png"><img style="width:2062px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2020.png"/></a></figure><p id="c2de55a3-0fbd-4c60-8567-387971a2316c" class="">
+</p><figure id="7c44db52-71db-4086-91b0-1c081f723275" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2021.png"><img style="width:2103px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2021.png"/></a></figure><p id="7e5dc6e4-c1d0-4b67-923c-a9968d008c84" class="">
+</p><ol type="1" id="fbea6222-402b-441d-b20f-1b07c4d88177" class="numbered-list" start="2"><li>Component 중심의 개발 → 재사용성 증가</li></ol><figure id="ca80af0f-981f-407d-a79b-f754addeb4ca" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2022.png"><img style="width:2184px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2022.png"/></a></figure><p id="40cc4dad-758e-430f-bbce-ab9fcede2d7a" class="">
+</p><figure id="f39ac174-b2c6-4e26-84a3-d21482df0632" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2023.png"><img style="width:2235px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2023.png"/></a></figure><p id="6ca8ee8f-ec2f-4af5-953b-b0ec13db4295" class="">
+</p><ul id="3491cc70-9e7b-4102-b3a9-f7c0235325f3" class="bulleted-list"><li style="list-style-type:disc">선언형 프로그래밍</li></ul><figure id="2c148c26-b0fd-4fbc-b427-5a7dc913f94c" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2024.png"><img style="width:2204px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2024.png"/></a></figure><p id="e60c733c-392e-474d-b487-545b7009013e" class="">
+</p><ul id="0230e3a2-493c-4335-8b91-ae42236f0bcd" class="bulleted-list"><li style="list-style-type:disc">Virtual Dom: 필요한 만큼의 연산만 수행 → 성능 향상</li></ul><figure id="9b1ab751-4429-4650-b924-7c64f9cbc6c4" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2025.png"><img style="width:1925px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2025.png"/></a></figure><p id="d99177f9-cdf9-4ba1-aaee-74a044ea0453" class="">
+</p><ul id="a5425fe9-fcc6-424a-8a7d-20966949133b" class="bulleted-list"><li style="list-style-type:disc">Create React App </li></ul><figure id="569b47e7-de12-4873-bb04-697932618618" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2026.png"><img style="width:2099px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2026.png"/></a></figure><p id="678d34df-b0b6-4f08-b218-87f6f2f67e50" class="">
+</p><figure id="9d062703-5148-4f01-b56e-3bb6269d5ee2" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2027.png"><img style="width:2194px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2027.png"/></a></figure><p id="cdd6b5e7-d45f-46d7-b7d8-c19197b22f69" class="">
+</p><ol type="1" id="6d170c2d-3c25-4650-b159-128e7ef26e4d" class="numbered-list" start="1"><li>Root Folder 열기</li></ol><ol type="1" id="a2bc6568-548a-4972-af42-5f6c03c09206" class="numbered-list" start="2"><li>Terminal &gt; npx creat-react-app 프로젝트이름(영어) : 새로운 react 프로젝트 만들기</li></ol><ol type="1" id="e5bf9230-74ad-4aae-be1c-560514dd8381" class="numbered-list" start="3"><li>Terminal &gt; npm start : 별다른 설정 없이 기본 React App 열기 </li></ol><ol type="1" id="f500ac93-158f-4b6e-a1c2-c4d9955cc782" class="numbered-list" start="4"><li>Terminal &gt; cnt + c : React App 종료</li></ol><p id="16b3fc73-05f4-4532-84dd-0e259fc759b1" class="">
+</p><figure id="0b97efcf-07ad-4b95-a607-f6d216a82460" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2028.png"><img style="width:2760px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2028.png"/></a></figure><p id="565ca319-a3ad-47fc-a4e2-2147cd15edfe" class="">
+</p><figure class="block-color-teal_background callout" style="white-space:pre-wrap;display:flex" id="b7f835e5-7041-4c52-af77-7333b1f95b74"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">React 환경에서의 node_modules는 사이즈가 상당히 크다. 
+때로는 node_modules가 없이 React project가 전달되기도 하는데, 
+당황하지 말고 Terminal &gt; npm i 를 통해 설치할 수 있다. 
+(package.json과 package-lock.json에 정보가 있기 때문 !)</div></figure><p id="df049ebd-732c-47c0-8a6a-17daa47a1201" class="">
+</p><ul id="0bcb624c-38c1-4488-a8b7-1f302f6a9a00" class="bulleted-list"><li style="list-style-type:disc">기본 구조 </li></ul><figure id="144f8c46-fb2b-4e75-b87f-0647ba634fd6" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2029.png"><img style="width:488px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2029.png"/></a></figure><p id="d1d62751-f151-404a-928b-6576ba06e896" class="">src에서 위의 파일을 제외하고는 당장에 사용하지 않으므로 삭제해도 무방하다. </p><p id="18044fdd-92c1-41d7-8347-8e3c1d97c406" class="">다만 해당 파일들을 import 하거나 사용하는 내용은 수정해야 오류가 나지 않는다. </p><p id="c8154783-852a-4a2c-9ede-c19201a8d5a5" class="">
+</p><ul id="c8d8f1f2-9e0b-4b23-8081-d8f71fa291db" class="bulleted-list"><li style="list-style-type:disc">React는 CommonJS module system을 사용하지 않고 <mark class="highlight-blue">ES module system</mark>을 사용한다.</li></ul><ul id="356333ce-9fdb-4fb8-a0bc-f1a10e67d9d0" class="bulleted-list"><li style="list-style-type:disc">JSX</li></ul><pre id="3d4c3810-c7f9-4153-8c36-4f75f8e5052a" class="code"><code>// src/MyHeader.js
+const MyHeader = () =&gt; {
+    return &lt;header&gt;헤더&lt;/header&gt;
+};
+
+export default MyHeader;</code></pre><pre id="0a69abc6-9924-44cb-8577-78e3cc104c45" class="code"><code>// src/MyFooter.js
+const MyFooter = () =&gt; {
+    return &lt;footer&gt;푸터&lt;/footer&gt;
+};
+
+export default MyFooter;</code></pre><pre id="d341fe46-a536-4f37-9f1b-44f55a19d1b4" class="code"><code>// src/App.js
+import &#x27;./App.css&#x27;;
+import MyHeader from &#x27;./MyHeader&#x27;;
+
+function App() {
+  return (
+  // Self closing tag : &lt;tag /&gt;
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;header className=&quot;App-header&quot;&gt; 
+        &lt;MyHeader /&gt;  
+      &lt;/header&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="f18283fc-c8b1-4c84-b10d-7d0ceada5c13" class="">Terminal &gt; npm start </p><figure id="2cad8c91-1d0b-4ee9-91f1-5d9ab253517c" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2030.png"><img style="width:2734px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2030.png"/></a></figure><figure class="block-color-teal_background callout" style="white-space:pre-wrap;display:flex" id="cb7de43e-2194-4f39-87bf-b4b07b593549"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">1. JSX CSS 설정시 class 대신 className을 사용한다.
+2. 삼항 연산자를 활용하여 조건부 렌더링을 할 수 있다. </div></figure><p id="16579e5c-6e90-4a66-863e-3e5556a8db06" class="">
+</p><ul id="239b2d67-f840-45cd-ae6c-d33dde19c4da" class="bulleted-list"><li style="list-style-type:disc">State: 이벤트 발생 시 동적으로 상태 변환 </li></ul><figure id="315d5bc8-66de-43b5-a2f8-eff94cac8bbc" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2031.png"><img style="width:2276px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2031.png"/></a></figure><p id="759e3f5b-9cba-4605-9eb9-8c5138d8c163" class="">
+</p><pre id="a4792461-e6b4-4087-829b-d73f372ae493" class="code"><code>// src/Counter.js
+import React, { useState } from &quot;react&quot;;
+
+const Counter = () =&gt; {
+  // 0에서 출발
+  // 1씩 증가하고, 1씩 감소
+  // state가 바뀔 때 마다 리렌더링 !
+  const [count, setCount] = useState(0);
+
+  const onIncrease = () =&gt; {
+    setCount(count + 1);
+  };
+
+  const onDecrease = () =&gt; {
+    setCount(count - 1);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;{count}&lt;/h2&gt;
+      &lt;button onClick={onIncrease}&gt;+&lt;/button&gt;
+      &lt;button onClick={onDecrease}&gt;-&lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default Counter;</code></pre><p id="135b7fb1-6fe7-49e8-8239-6110a20ec8fb" class="">
+</p><pre id="2cd5261f-fcc0-4988-94d6-8aebdc8b5534" class="code"><code>// src/App.js
+import &quot;./App.css&quot;;
+import Counter from &quot;./Counter&quot;;
+
+function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;Counter /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="1cc754d3-c7ab-4c17-98c5-20a7f9ff927b" class="">Terminal &gt; npm start </p><figure id="275e7757-ebf4-49ad-8665-95bfbb0469c9" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2032.png"><img style="width:200px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2032.png"/></a></figure><p id="c2d33319-c967-415e-abe8-84c61d9d2411" class="">
+</p><ul id="2959bc34-d319-481f-88c8-183b7a5f8bca" class="bulleted-list"><li style="list-style-type:disc">Props: 컴포넌트에 데이터를 전달하는 방법</li></ul><pre id="3e3d9752-a773-46fa-9ea2-00d5b2ac4648" class="code"><code>// src/Counter.js
+import React, { useState } from &quot;react&quot;;
+import OddEven from &quot;./OddEven&quot;;
+
+const Counter = ({initialValue}) =&gt; {
+  // 0에서 출발
+  // 1씩 증가하고, 1씩 감소
+  // state가 바뀔 때 마다 리렌더링 !
+  const [count, setCount] = useState(initialValue);
+
+  const onIncrease = () =&gt; {
+    setCount(count + 1);
+  };
+
+  const onDecrease = () =&gt; {
+    setCount(count - 1);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;h2&gt;{count}&lt;/h2&gt;
+      &lt;button onClick={onIncrease}&gt;+&lt;/button&gt;
+      &lt;button onClick={onDecrease}&gt;-&lt;/button&gt;
+      &lt;OddEven count={count} /&gt;
+    &lt;/div&gt;
+  );
+};
+
+// 데이터가 없는 경우 사용하는 디폴트 Props 설정
+Counter.defaultProps = {
+    initialValue: 0
+};
+
+export default Counter;</code></pre><p id="c1f90bb6-eb2a-4988-b385-168f3f4c7e9d" class="">
+</p><pre id="fc4162a1-9db6-4816-9ce6-47f775ed0f59" class="code"><code>// src/OddEven.js
+const OddEven = (count) =&gt; {
+  return &lt;&gt;{count % 2 === 0 ? &quot;짝수&quot; : &quot;홀수&quot;}&lt;/&gt;;
+};
+
+export default OddEven;</code></pre><p id="6974380a-c2fb-4fff-9769-d79560060475" class="">
+</p><pre id="0788cd09-4acc-42bf-927f-9714bd5526cb" class="code"><code>// src/App.js
+import &quot;./App.css&quot;;
+import Counter from &quot;./Counter&quot;;
+
+function App() {
+  const counterProps = {
+    a: 1,
+    b: 2,
+    c: 3,
+    d: 4,
+    initialValue: 5
+  };
+
+  // 구조분해할당으로 프로퍼티 전달
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;Counter {...counterProps}/&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="87193b4e-2b96-4152-86e7-a4dbd605e440" class="">Terminal &gt; npm start </p><figure id="f6fee2e8-f178-4546-a2e2-2b407e98185d" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2023-08-10_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_12.28.31.png"><img style="width:244px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2023-08-10_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%258C%25E1%2585%25A5%25E1%2586%25AB_12.28.31.png"/></a></figure><p id="bbf8abaa-0847-4f13-8067-6faf6429ab32" class="">
+</p><h3 id="3df5a3c4-138d-4488-a7a6-531115a10eca" class="">Section 5. 간단한 일기장 만들기 </h3><p id="b1ad4b44-6594-499e-be7f-789ed7d5cfa5" class="">! Lesson 1. React에서 사용자 입력 처리 </p><figure id="6532f7e5-89b9-4457-88ad-9548d0d2ed98" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2033.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2033.png"/></a></figure><pre id="da570d63-3230-4299-961e-5a3b23704e7b" class="code"><code>// src.DiaryEditor.js
+import { useState } from &quot;react&quot;;
+
+const DiaryEditor = () =&gt; {
+  const [state, setState] = useState({
+    author: &quot;&quot;,
+    content: &quot;&quot;,
+    emotion: 1,
+  });
+
+  const handleChangeState = (event) =&gt; {
+    setState({
+      // spread 연산자가 위에 위치해야한다.
+      ...state,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = () =&gt; {
+    console.log(state);
+    alert(&quot;저장 완료&quot;);
+  };
+  return (
+    &lt;div className=&quot;DiaryEditor&quot;&gt;
+      &lt;h2&gt;오늘의 일기&lt;/h2&gt;
+      &lt;div&gt;
+        &lt;input
+          // name
+          // value
+          // onChange
+          name=&quot;author&quot;
+          value={state.author}
+          onChange={handleChangeState}
+        /&gt;
+        &lt;div&gt;
+          &lt;textarea
+            //name
+            // value
+            // onChange
+            name=&quot;content&quot;
+            value={state.content}
+            onChange={handleChangeState}
+          /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;select
+            // name
+            // value
+            // onChange
+            name=&quot;emotion&quot;
+            value={state.emotion}
+            onChange={handleChangeState}
+          &gt;
+            &lt;option value={1}&gt;1&lt;/option&gt;
+            &lt;option value={2}&gt;2&lt;/option&gt;
+            &lt;option value={3}&gt;3&lt;/option&gt;
+            &lt;option value={4}&gt;4&lt;/option&gt;
+            &lt;option value={5}&gt;5&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;button onClick={handleSubmit}&gt;일기 저장하기&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default DiaryEditor;</code></pre><p id="06355b58-67d5-4e9e-a71e-582a73c571b4" class="">
+</p><pre id="2fc52cb8-2935-4ecf-9965-64184954c971" class="code"><code>// src/App.js
+import &quot;./App.css&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+
+
+function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;DiaryEditor /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="3db8dcb8-2c37-4f6d-82f2-d32da43d5491" class="">
+</p><pre id="b3a1972f-a194-42b7-8ce3-c72e23ab869a" class="code"><code>// src/App.css
+.DiaryEditor {
+  border: 1px solid grey;
+  text-align: center;
+  padding: 20px;
+}
+
+.DiaryEditor input,
+textarea {
+  margin-bottom: 20px;
+  width: 500px;
+
+  padding: 10px;
+}
+
+.DiaryEditor textarea {
+  height: 100px;
+}
+
+.DiaryEditor select {
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.DiaryEditor button {
+  width: 500px;
+  padding: 10px;
+  cursor: pointer;
+}</code></pre><p id="df1dbec1-2a02-4de5-87e0-c3f6d1dfd890" class="">
+</p><p id="7df3cf2d-daa6-487f-85d0-a228d0675723" class="">! Lesson 2. React에서 DOM 조작하기</p><figure id="dbdca713-d880-4101-81a7-788d9ee15f5b" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2034.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2034.png"/></a></figure><p id="31ca0188-d548-472c-a5ad-d39deb581486" class="">
+</p><pre id="4c6e1765-a68b-4bca-829f-c50d4c6fd9e6" class="code"><code>// src/DiaryEditor.js
+import { useRef, useState } from &quot;react&quot;;
+
+const DiaryEditor = () =&gt; {
+  const [state, setState] = useState({
+    author: &quot;&quot;,
+    content: &quot;&quot;,
+    emotion: 1,
+  });
+  // 정상적인 입력결과가 아닐 때 focus를 주는 기능 추가
+  const authorInput = useRef();
+  const contentInput = useRef();
+
+  const handleChangeState = (event) =&gt; {
+    setState({
+      // spread 연산자가 위에 위치해야한다.
+      ...state,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = () =&gt; {
+    if (state.author.length &lt; 1) {
+      // focus -&gt; useRef 사용
+      authorInput.current.focus();
+      return;
+    }
+    if (state.content.length &lt; 5) {
+      // focus -&gt; useRef 사용
+      contentInput.current.focus();
+      return;
+    }
+    alert(&quot;저장 완료&quot;);
+  };
+  return (
+    &lt;div className=&quot;DiaryEditor&quot;&gt;
+      &lt;h2&gt;오늘의 일기&lt;/h2&gt;
+      &lt;div&gt;
+        &lt;input
+          // name
+          // value
+          // onChange
+          ref={authorInput}
+          name=&quot;author&quot;
+          value={state.author}
+          onChange={handleChangeState}
+        /&gt;
+        &lt;div&gt;
+          &lt;textarea
+            //name
+            // value
+            // onChange
+            ref={contentInput}
+            name=&quot;content&quot;
+            value={state.content}
+            onChange={handleChangeState}
+          /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;select
+            // name
+            // value
+            // onChange
+            name=&quot;emotion&quot;
+            value={state.emotion}
+            onChange={handleChangeState}
+          &gt;
+            &lt;option value={1}&gt;1&lt;/option&gt;
+            &lt;option value={2}&gt;2&lt;/option&gt;
+            &lt;option value={3}&gt;3&lt;/option&gt;
+            &lt;option value={4}&gt;4&lt;/option&gt;
+            &lt;option value={5}&gt;5&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;button onClick={handleSubmit}&gt;일기 저장하기&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default DiaryEditor;</code></pre><p id="dff4b0f7-7b3f-46ab-9232-efe97b73f09a" class="">
+</p><p id="f7a6777b-87cd-4a94-872d-79791ffaaec1" class="">! Lesson 3. React에서 리스트 사용하기</p><figure id="b53cee4c-1e2d-40b3-b1eb-1b864dc787d4" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2035.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2035.png"/></a></figure><p id="48196241-6de2-4e56-8890-9b97bfddf50a" class="">
+</p><pre id="2e049a2d-087a-46f5-ac09-0d127c9b91b5" class="code"><code>// src/DiaryList.js
+import DiaryItem from &quot;./DiaryItem&quot;;
+
+// Array를 props로 전달받을 때는 중괄호로 감싸야 한다.
+const DiaryList = ({ diaryList }) =&gt; {
+  console.log(diaryList);
+
+  return (
+    &lt;div className=&quot;DiaryList&quot;&gt;
+      &lt;h2&gt;일기 리스트&lt;/h2&gt;
+      &lt;h4&gt;{diaryList.length}개의 일기가 있습니다.&lt;/h4&gt;
+      &lt;div&gt;
+        {/* map 내장함수를 이용하여 리스트 형태로 렌더링 */}
+        {/* map은 화살표 함수 사용 시 중괄호 대신 소괄호 사용.. why? */}
+        {diaryList.map((iter) =&gt; (
+            &lt;DiaryItem key={iter.id} {...iter}/&gt;
+            
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+// Default Props 설정
+DiaryList.defaultProps = {
+  diaryList: [],
+};
+
+export default DiaryList;</code></pre><p id="adadb6c2-f8be-48d7-8cbf-f6e7ec15df97" class="">
+</p><pre id="8ab9e774-93b2-4366-93bd-caa7e9ed7050" class="code"><code>// src/DiaryItem.js
+const DiaryItem = ({ author, content, created_date, emotion, id }) =&gt; {
+  return (
+    &lt;div className=&quot;DiaryItem&quot;&gt;
+      &lt;div className=&quot;info&quot;&gt;
+        &lt;span&gt;
+          작성자: {author} | 감정점수 : {emotion}
+        &lt;/span&gt;
+        &lt;br /&gt;
+        &lt;span className=&quot;date&quot;&gt;
+          {/* ms 시간을 전달하여 Date객체를 만들어 
+            사람이 보기 편한 시간으로 변환 */}
+          {new Date(created_date).toLocaleString()}
+        &lt;/span&gt;
+        &lt;div className=&quot;content&quot;&gt;{content}&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default DiaryItem;</code></pre><p id="00395de0-6878-4062-a718-d18928a1d3b5" class="">
+</p><pre id="6d735447-43dd-47d6-b1ba-61a1f67bc112" class="code"><code>// src/App.js
+import &quot;./App.css&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+
+const dummyList = [
+  {
+    id: 1,
+    author: &quot;곽&quot;,
+    content: &quot;하이 1&quot;,
+    emotion: 1,
+    // Date 객체를 만들어 현재 시간 저장
+    created_date: new Date().getTime(),
+  },
+  {
+    id: 2,
+    author: &quot;성&quot;,
+    content: &quot;하이 2&quot;,
+    emotion: 2,
+    // Date 객체를 만들어 현재 시간 저장
+    created_date: new Date().getTime(),
+  },
+  {
+    id: 3,
+    author: &quot;재&quot;,
+    content: &quot;하이 3&quot;,
+    emotion: 3,
+    // Date 객체를 만들어 현재 시간 저장
+    created_date: new Date().getTime(),
+  },
+  {
+    id: 4,
+    author: &quot;&quot;,
+    content: &quot;하이 4&quot;,
+    emotion: 1,
+    // Date 객체를 만들어 현재 시간 저장
+    created_date: new Date().getTime(),
+  },
+];
+
+function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;DiaryEditor /&gt;
+      &lt;DiaryList diaryList={dummyList} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="0ba091f4-f097-4e7f-b4b7-0af4cd9dba01" class="">
+</p><pre id="5efde95f-e035-4493-b8e8-b5c030f99128" class="code"><code>// src/App.css
+.DiaryEditor {
+  border: 1px solid grey;
+  text-align: center;
+  padding: 20px;
+}
+
+.DiaryEditor input,
+textarea {
+  margin-bottom: 20px;
+  width: 500px;
+
+  padding: 10px;
+}
+
+.DiaryEditor textarea {
+  height: 100px;
+}
+
+.DiaryEditor select {
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.DiaryEditor button {
+  width: 500px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+/* List */
+.DiaryList {
+  border: 1px solid gray;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.DiaryList h2 {
+  text-align: center;
+}
+
+/* Item */
+.DiaryItem {
+  background-color: rgb(240, 240, 240);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.DiaryItem .info {
+  border-bottom: 1px solid gray;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.DiaryItem .date {
+  color: gray;
+}
+
+.DiaryItem .content {
+  font-weight: bold;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}</code></pre><p id="3235ae0a-6bda-4d28-9fe4-79d949e325a3" class="">
+</p><p id="23175d0f-f8be-420f-ad21-fe488b813a24" class="">! Lesson 4. 리스트에 데이터 추가하기: Create</p><figure id="2ecbb6b8-76a6-4ca5-bf41-a76620a001f5" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2036.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2036.png"/></a></figure><ul id="44f19cd7-2a16-4acd-ab0c-93519a54dd19" class="bulleted-list"><li style="list-style-type:disc">Component 트리 그리며 사고하기.</li></ul><figure id="2fe12a78-fcd1-4dc6-add1-699991be3225" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2037.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2037.png"/></a></figure><p id="91d97878-5e63-41d9-a25b-2c498afc3bfd" class="">
+</p><figure id="7869d776-92a4-49aa-bc94-b076fb459672" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2038.png"><img style="width:2151px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2038.png"/></a></figure><p id="e1f6f4d2-2d01-4426-8c11-1e2ba7513503" class="">
+</p><figure id="de0e32f5-5443-40c5-89a7-29aa7c884d1b" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2039.png"><img style="width:2359px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2039.png"/></a></figure><p id="13429e10-3722-415d-9cfc-026893db990c" class="">
+</p><ul id="0b422715-47a5-49ca-89df-a730c7528470" class="bulleted-list"><li style="list-style-type:disc">천천히 다시 쳐보며 흐름 이해하기</li></ul><pre id="822bbfec-d377-49e3-b803-cab449dff253" class="code"><code>// src/App.js 
+// dummyList 삭제
+// onCreate 기능 추가
+import &quot;./App.css&quot;;
+import { useState, useRef } from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  const [data, setData] = useState([]);
+  const dateId = useRef(0);
+
+  const onCreate = (author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dateId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+    dateId.current += 1;
+    setData([newItem, ...data]);
+  };
+
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;DiaryEditor onCreate={onCreate} /&gt;
+      {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+      &lt;DiaryList diaryList={data} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="76a01c26-48db-4c6b-a9fd-be46cfcce5e3" class="">
+</p><pre id="9711d63a-0da1-415a-9fde-a530d0ccdbc7" class="code"><code>// src/DiaryEditor.js
+// handleSubmit함수에 onCreate 적용
+// 저장 후 state 초기화
+import { useRef, useState } from &quot;react&quot;;
+
+const DiaryEditor = ({ onCreate }) =&gt; {
+  const [state, setState] = useState({
+    author: &quot;&quot;,
+    content: &quot;&quot;,
+    emotion: 1,
+  });
+  // 정상적인 입력결과가 아닐 때 focus를 주는 기능 추가
+  const authorInput = useRef();
+  const contentInput = useRef();
+
+  const handleChangeState = (event) =&gt; {
+    setState({
+      // spread 연산자가 위에 위치해야한다.
+      ...state,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = () =&gt; {
+    if (state.author.length &lt; 1) {
+      // focus -&gt; useRef 사용
+      authorInput.current.focus();
+      return;
+    }
+    if (state.content.length &lt; 5) {
+      // focus -&gt; useRef 사용
+      contentInput.current.focus();
+      return;
+    }
+    onCreate(state.author, state.content, state.emotion);
+    alert(&quot;저장 완료&quot;);
+    setState({ author: &quot;&quot;, content: &quot;&quot;, emotion: 1 });
+  };
+  return (
+    &lt;div className=&quot;DiaryEditor&quot;&gt;
+      &lt;h2&gt;오늘의 일기&lt;/h2&gt;
+      &lt;div&gt;
+        &lt;input
+          // name
+          // value
+          // onChange
+          ref={authorInput}
+          name=&quot;author&quot;
+          value={state.author}
+          onChange={handleChangeState}
+        /&gt;
+        &lt;div&gt;
+          &lt;textarea
+            //name
+            // value
+            // onChange
+            ref={contentInput}
+            name=&quot;content&quot;
+            value={state.content}
+            onChange={handleChangeState}
+          /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;select
+            // name
+            // value
+            // onChange
+            name=&quot;emotion&quot;
+            value={state.emotion}
+            onChange={handleChangeState}
+          &gt;
+            &lt;option value={1}&gt;1&lt;/option&gt;
+            &lt;option value={2}&gt;2&lt;/option&gt;
+            &lt;option value={3}&gt;3&lt;/option&gt;
+            &lt;option value={4}&gt;4&lt;/option&gt;
+            &lt;option value={5}&gt;5&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;button onClick={handleSubmit}&gt;일기 저장하기&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default DiaryEditor;</code></pre><p id="726239f6-bb54-457f-a975-813bafb3fb52" class="">
+</p><p id="886ed136-1819-413b-ba64-a0b39ec01062" class="">! Lesson 5. 리스트 데이터 삭제하기: Delete</p><pre id="e482bd76-e8e0-43b9-8d13-f0512caf84c0" class="code"><code>// src/App.js
+// onDelete 추가
+import &quot;./App.css&quot;;
+import { useState, useRef } from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  const [data, setData] = useState([]);
+  const dateId = useRef(1);
+
+  const onCreate = (author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dateId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+    dateId.current += 1;
+    setData([newItem, ...data]);
+  };
+
+  const onDelete = (targetId) =&gt; {
+    console.log(`${targetId}가 삭제되었습니다.`);
+    const newDiaryList = data.filter((iter) =&gt; iter.id !== targetId);
+    setData(newDiaryList);
+  };
+
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;DiaryEditor onCreate={onCreate} /&gt;
+      {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+      &lt;DiaryList diaryList={data} onDelete={onDelete} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="1070f453-4aa3-4117-b294-ecc02c2e52df" class="">
+</p><pre id="07edafe4-a982-4f77-893e-8d0c12b0fe20" class="code"><code>// src/DiaryList.js
+// onDelete함수를 DiaryItem 컴포넌트에 전달
+import DiaryItem from &quot;./DiaryItem&quot;;
+
+// Array를 props로 전달받을 때는 중괄호로 감싸야 한다.
+const DiaryList = ({ onDelete, diaryList }) =&gt; {
+  console.log(diaryList);
+
+  return (
+    &lt;div className=&quot;DiaryList&quot;&gt;
+      &lt;h2&gt;일기 리스트&lt;/h2&gt;
+      &lt;h4&gt;{diaryList.length}개의 일기가 있습니다.&lt;/h4&gt;
+      &lt;div&gt;
+        {/* map 내장함수를 이용하여 리스트 형태로 렌더링 */}
+        {/* map은 화살표 함수 사용 시 중괄호 대신 소괄호 사용.. why? */}
+        {diaryList.map((iter) =&gt; (
+          &lt;DiaryItem key={iter.id} {...iter} onDelete={onDelete} /&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+// Default Props 설정
+DiaryList.defaultProps = {
+  diaryList: [],
+};
+
+export default DiaryList;</code></pre><p id="0dd81eea-3e99-4985-8640-0d7e12a16e57" class="">
+</p><pre id="3d3cb445-e378-4101-a734-d49a9e8f6508" class="code"><code>// src/DiaryItem
+// 삭제하기 버튼 추가
+const DiaryItem = ({ onDelete, author, content, created_date, emotion, id }) =&gt; {
+  return (
+    &lt;div className=&quot;DiaryItem&quot;&gt;
+      &lt;div className=&quot;info&quot;&gt;
+        &lt;span&gt;
+          작성자: {author} | 감정점수 : {emotion}
+        &lt;/span&gt;
+        &lt;br /&gt;
+        &lt;span className=&quot;date&quot;&gt;
+          {/* ms 시간을 전달하여 Date객체를 만들어 
+            사람이 보기 편한 시간으로 변환 */}
+          {new Date(created_date).toLocaleString()}
+        &lt;/span&gt;
+        &lt;div className=&quot;content&quot;&gt;{content}&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;button
+        onClick={() =&gt; {
+          console.log(id);
+          if(window.confirm(`${id}번째 일기를 정말 삭제하겠습니까?`)){
+            onDelete(id);
+          }
+        }}
+      &gt;
+        삭제하기
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default DiaryItem;</code></pre><p id="8ea28621-2d70-4bce-85c8-5a73e20d1ad7" class="">
+</p><p id="22d4ab40-7e1c-452b-bbfd-e93ce468929f" class="">! Lesson 6. 리스트 데이터 수정하기: Update</p><figure id="2cb947ee-bad6-4154-9ada-d661bbd1611e" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2040.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2040.png"/></a></figure><p id="10879688-3a68-4120-a738-31339dda2adb" class="">
+</p><pre id="1258f121-b7fa-40cc-98dc-6111525bc1fa" class="code"><code>// src/App.js
+// onDelete -&gt; onRemove
+// onEdit 추가
+import &quot;./App.css&quot;;
+import { useState, useRef } from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  const [data, setData] = useState([]);
+  const dateId = useRef(1);
+
+  const onCreate = (author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dateId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+    dateId.current += 1;
+    setData([newItem, ...data]);
+  };
+
+  const onRemove = (targetId) =&gt; {
+    console.log(`${targetId}가 삭제되었습니다.`);
+    const newDiaryList = data.filter((iter) =&gt; iter.id !== targetId);
+    setData(newDiaryList);
+  };
+
+  const onEdit = (targetId, newContent) =&gt; {
+    setData(
+      data.map((iter) =&gt;
+        iter.id === targetId ? { ...iter, content: newContent } : iter
+      )
+    );
+  };
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;DiaryEditor onCreate={onCreate} /&gt;
+      {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+      &lt;DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="84d9869c-eb65-4e78-bf1c-bac45f5e07ff" class="">
+</p><pre id="ef8ecd45-84a0-464c-8879-ed5c009ba2be" class="code"><code>// src/DiaryList.js
+// onDelete -&gt; onRemove
+// onEdit함수를 자식 컴포넌트에 전달
+import DiaryItem from &quot;./DiaryItem&quot;;
+
+// Array를 props로 전달받을 때는 중괄호로 감싸야 한다.
+const DiaryList = ({ onEdit, onRemove, diaryList }) =&gt; {
+  console.log(diaryList);
+
+  return (
+    &lt;div className=&quot;DiaryList&quot;&gt;
+      &lt;h2&gt;일기 리스트&lt;/h2&gt;
+      &lt;h4&gt;{diaryList.length}개의 일기가 있습니다.&lt;/h4&gt;
+      &lt;div&gt;
+        {/* map 내장함수를 이용하여 리스트 형태로 렌더링 */}
+        {/* map은 화살표 함수 사용 시 중괄호 대신 소괄호 사용.. why? */}
+        {diaryList.map((iter) =&gt; (
+          &lt;DiaryItem
+            key={iter.id}
+            {...iter}
+            onRemove={onRemove}
+            onEdit={onEdit}
+          /&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+// Default Props 설정
+DiaryList.defaultProps = {
+  diaryList: [],
+};
+
+export default DiaryList;</code></pre><p id="4f4013f3-ae42-47a8-a547-26ef06ed312c" class="">
+</p><pre id="1583b20d-26fc-4d1e-8aed-4d7ea7d386c8" class="code"><code>// src/DiaryItem.js
+// 수정 기능 추가
+// handleRemove, handleQuitEdit, handleEdit 추가
+// State: isEdit | Ref: localContentInput
+
+import { useState, useRef } from &quot;react&quot;;
+
+const DiaryItem = ({
+  onEdit,
+  onRemove,
+  author,
+  content,
+  created_date,
+  emotion,
+  id,
+}) =&gt; {
+	const localContentInput = useRef();
+  const [localContent, setLocalContent] = useState(content);
+  const [isEdit, setIsEdit] = useState(false);
+  const toggleIsEdit = () =&gt; setIsEdit(!isEdit);
+
+  const handleRemove = () =&gt; {
+    console.log(id);
+    if (window.confirm(`${id}번째 일기를 정말 삭제하겠습니까?`)) {
+      onRemove(id);
+    }
+  };
+
+  const handleQuitEdit = () =&gt; {
+    setIsEdit(false);
+    setLocalContent(content);
+  };
+
+  const handleEdit = () =&gt; {
+    if (content.length &lt; 5) {
+      localContentInput.current.focus();
+    }
+    if (window.confirm(`${id}번째 일기를 수정하시겠습니까?`)) {
+      onEdit(id, localContent);
+    }
+    toggleIsEdit(isEdit);
+  };
+
+  return (
+    &lt;div className=&quot;DiaryItem&quot;&gt;
+      &lt;div className=&quot;info&quot;&gt;
+        &lt;span&gt;
+          작성자: {author} | 감정점수 : {emotion}
+        &lt;/span&gt;
+        &lt;br /&gt;
+        &lt;span className=&quot;date&quot;&gt;
+          {/* ms 시간을 전달하여 Date객체를 만들어 
+            사람이 보기 편한 시간으로 변환 */}
+          {new Date(created_date).toLocaleString()}
+        &lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div className=&quot;content&quot;&gt;
+        {isEdit ? (
+          &lt;&gt;
+            &lt;textarea
+              ref={localContentInput}
+              value={localContent}
+              onChange={(event) =&gt; setLocalContent(event.target.value)}
+            /&gt;
+          &lt;/&gt;
+        ) : (
+          &lt;&gt;{content}&lt;/&gt;
+        )}
+      &lt;/div&gt;
+      {isEdit ? (
+        &lt;&gt;
+          &lt;button onClick={handleQuitEdit}&gt;수정취소&lt;/button&gt;
+          &lt;button onClick={handleEdit}&gt;수정완료&lt;/button&gt;
+        &lt;/&gt;
+      ) : (
+        &lt;&gt;
+          &lt;button onClick={handleRemove}&gt;삭제하기&lt;/button&gt;
+          &lt;button onClick={toggleIsEdit}&gt;수정하기&lt;/button&gt;
+        &lt;/&gt;
+      )}
+    &lt;/div&gt;
+  );
+};
+
+export default DiaryItem;</code></pre><p id="94907ca6-315b-4db4-bf34-816fc1dba21d" class="">
+</p><p id="e45a560c-f3ee-4790-a6c0-a2b13a19efb3" class="">! Lesson 7. React Lifecycle 제어하기: useEffect</p><figure id="274e6326-0b5b-445b-b8fa-6da5129674e3" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2041.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2041.png"/></a></figure><p id="88a9a413-9568-4889-8fe4-690fba85e6d9" class="">
+</p><figure id="1c05cd57-b15b-4cd4-a7f9-78f234547faf" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2042.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2042.png"/></a></figure><p id="42db0db7-eca5-4d87-854c-7ef033ac225c" class="">
+</p><figure id="64eb0961-433f-49b0-8454-197e481c7ed8" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2043.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2043.png"/></a></figure><p id="45c9ca53-45fe-4948-b4d5-bdf41fc15842" class="">
+</p><figure id="c2bc14c9-0973-4476-8f1b-c164655b72f9" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2044.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2044.png"/></a></figure><p id="3bd08713-f430-4890-9a8f-d8c455380b2d" class="">
+</p><figure id="48771590-2efb-43da-a174-4c01f5ec0965" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2045.png"><img style="width:2388px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2045.png"/></a></figure><p id="341d647b-d6eb-4792-ae77-0bd5d5acba7f" class="">
+</p><pre id="c04b846c-e499-4e9a-9e6e-a6107a06ac9b" class="code"><code>// src/App.js
+// Lifecyle 경로 추가 및 컴포넌트 추가
+import &quot;./App.css&quot;;
+import { useState, useRef } from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+import Lifecycle from &quot;./Lifecycle&quot;;
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  const [data, setData] = useState([]);
+  const dateId = useRef(1);
+
+  const onCreate = (author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dateId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+    dateId.current += 1;
+    setData([newItem, ...data]);
+  };
+
+  const onRemove = (targetId) =&gt; {
+    console.log(`${targetId}가 삭제되었습니다.`);
+    const newDiaryList = data.filter((iter) =&gt; iter.id !== targetId);
+    setData(newDiaryList);
+  };
+
+  const onEdit = (targetId, newContent) =&gt; {
+    setData(
+      data.map((iter) =&gt;
+        iter.id === targetId ? { ...iter, content: newContent } : iter
+      )
+    );
+  };
+
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;Lifecycle /&gt;
+      &lt;DiaryEditor onCreate={onCreate} /&gt;
+      {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+      &lt;DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><pre id="f6519843-8e15-4d74-85a0-38f3a1d75e8e" class="code"><code>// src/Lifecyle.js
+// useEffect를 사용해 React Lifecyle 관리: Mount, Update, Unmount
+import React, { useEffect, useState } from &quot;react&quot;;
+
+const UnmountTest = () =&gt; {
+    // Component가 Unmount되는 시점에 하고 싶은 작업
+    // 콜백함수에 리턴 추가
+  useEffect(() =&gt; {
+    console.log(&quot;Mount!&quot;);
+    return () =&gt; {
+      // Unmount 시점에 실행
+      console.log(&quot;Unmount!&quot;);
+    };
+  });
+  return &lt;div&gt;Unmount Testing&lt;/div&gt;;
+};
+
+const Lifecycle = () =&gt; {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleIsVisible = () =&gt; setIsVisible(!isVisible);
+
+  // Component가 Mount되는 시점에 하고 싶은 작업
+  // 두번째 인자로 빈 배열(Dependency array) 추가
+  useEffect(() =&gt; {
+    console.log(&quot;Mount!&quot;);
+  }, []);
+
+  // Component가 Update되는 시점에 하고 싶은 작업
+  // 두번째 인자로 아무것도 주지 않는다.
+  useEffect(() =&gt; {
+    console.log(&quot;Update!&quot;);
+  });
+
+  // Dependency Array에 있는 값이 변화하는 순간 Callback 함수 호출
+  useEffect(() =&gt; {
+    console.log(`count is updated: ${count}`);
+    if (count &gt; 5) {
+      alert(&quot;count가 5를 넘었습니다. 1로 초기화합니다.&quot;);
+      setCount(1);
+    }
+  }, [count]);
+
+  return (
+    &lt;div style={{ padding: 20 }}&gt;
+      &lt;div&gt;
+        {count}
+        &lt;button onClick={() =&gt; setCount(count + 1)}&gt;+&lt;/button&gt;
+        &lt;button onClick={toggleIsVisible}&gt;ON/OFF&lt;/button&gt;
+        {/* 단락회로평가로 구현 */}
+        {isVisible &amp;&amp; &lt;UnmountTest /&gt;}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default Lifecycle;</code></pre><p id="dcc1265f-4399-4d6e-a86e-deb69b39a121" class="">
+</p><p id="142c511b-9cb5-4c80-9cab-d0f467844de4" class="">! Lesson 8. React에서 API 호출하기: fetch</p><figure id="931d7558-ade0-4afc-806e-9f757a217941" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2046.png"><img style="width:2269px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2046.png"/></a></figure><ul id="60d43d72-fbfc-4b68-8250-afcdcc1f006f" class="bulleted-list"><li style="list-style-type:disc">JSONPlaceholder 활용</li></ul><pre id="34225715-e2dd-4a23-9676-e39f8980739f" class="code"><code>// src/App.js
+// Lifecyle 삭제
+// getData 추가 &amp; useEffect 추가 : fetch
+// 초기 데이터를 fetch한 데이터로 설정
+import &quot;./App.css&quot;;
+import { useState, useRef, useEffect } from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+
+// https://jsonplaceholder.typicode.com/comments
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  const [data, setData] = useState([]);
+  const dataId = useRef(1);
+  const getData = async () =&gt; {
+    // fetch 이후 json으로 변환
+    const res = await fetch(
+      &quot;https://jsonplaceholder.typicode.com/comments&quot;
+    ).then((res) =&gt; res.json());
+
+    const initData = res.slice(0, 20).map((iter) =&gt; {
+      return {
+        author: iter.email,
+        content: iter.body,
+        // 1~5 사이의 랜덤한 숫자 부여
+        emotion: Math.floor(Math.random() * 5) + 1,
+        created_date: new Date().getTime(),
+        id: dataId.current++,
+      };
+    });
+
+    setData(initData);
+  };
+
+  // Mount하는 시점에 실행하는 코드
+  useEffect(() =&gt; {
+    getData();
+  }, []);
+
+  const onCreate = (author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dataId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+    dataId.current += 1;
+    setData([newItem, ...data]);
+  };
+
+  const onRemove = (targetId) =&gt; {
+    console.log(`${targetId}가 삭제되었습니다.`);
+    const newDiaryList = data.filter((iter) =&gt; iter.id !== targetId);
+    setData(newDiaryList);
+  };
+
+  const onEdit = (targetId, newContent) =&gt; {
+    setData(
+      data.map((iter) =&gt;
+        iter.id === targetId ? { ...iter, content: newContent } : iter
+      )
+    );
+  };
+
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;DiaryEditor onCreate={onCreate} /&gt;
+      {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+      &lt;DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="a1463426-c3d4-4f7d-bb3c-a3795252dadf" class="">
+</p><ul id="d9dd1f18-29a3-45b5-a623-1bb8e2a96783" class="bulleted-list"><li style="list-style-type:disc">React Developer Tools : Component의 계층 구조 및 구성 확인 가능 </li></ul><p id="27e897d7-a0c3-4af9-b91b-878a820690fe" class="">
+</p><p id="65a47de9-4ce6-4875-ab5f-d89cd4068b0b" class="">! Lesson 9. 최적화 1 - 연산 결과 재사용 : useMemo</p><figure id="d5f19fa3-a968-424a-a13a-31c2a67c78fe" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2047.png"><img style="width:2241px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2047.png"/></a></figure><p id="4d7e3e9f-5074-46df-bb07-24f6d5c4e0ac" class="">
+</p><figure id="1456ddd9-b010-4733-b654-a471ff022b8c" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2048.png"><img style="width:2131px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2048.png"/></a></figure><p id="1ea4a7bf-eec6-4d7f-81fe-b7465ef653dd" class="">
+</p><p id="f0fce9d0-0341-4b22-9c59-e3cfd4a375a5" class="">! Lesson 10. 최적화 2 - 함수형 컴포넌트에게 업데이트 조건 걸기 : React.memo</p><figure id="45a0612c-79ec-465e-b94c-7332ba1c3006" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2049.png"><img style="width:2255px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2049.png"/></a></figure><p id="6be2a620-3138-4f0d-8208-bf4b6dc72ddb" class="">
+</p><figure id="1cff056a-ebd8-4e43-a2a6-5c3912b1af6f" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2050.png"><img style="width:2245px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2050.png"/></a></figure><p id="f73abcfc-e969-4f66-ac68-b39b4d21d849" class="">
+</p><ul id="a5d19ae8-3806-40e3-b781-5bf9a706ff50" class="bulleted-list"><li style="list-style-type:disc">React 공식문서 참고 : </li></ul><figure id="0fb0cdd5-27ee-4de6-9681-1d5771431907"><a href="https://ko.legacy.reactjs.org/docs/react-api.html#reactmemo" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">React 최상위 API – React</div><div class="bookmark-description">A JavaScript library for building user interfaces</div></div><div class="bookmark-href"><img src="https://ko.legacy.reactjs.org/icons/icon-512x512.png?v=f4d46f030265b4c48a05c999b8d93791" class="icon bookmark-icon"/>https://ko.legacy.reactjs.org/docs/react-api.html#reactmemo</div></div><img src="https://legacy.reactjs.org/logo-og.png" class="bookmark-image"/></a></figure><p id="f29be407-436a-40db-a7a8-0f432b03f0ed" class="">
+</p><p id="1a31b870-f22f-4049-88e2-a8671b29541e" class="">
+</p><figure id="2b061497-2874-444a-944f-d9984a70209f" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2051.png"><img style="width:2240px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2051.png"/></a></figure><p id="64dca2c2-55ca-4e48-a79d-2564a92bae6b" class="">
+</p><figure id="b79d77b3-566c-468c-8e6e-9cd40535f4a8" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2052.png"><img style="width:2201px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2052.png"/></a></figure><p id="387eb518-7551-4881-af12-5b93e034723b" class="">
+</p><pre id="c20eff92-2f68-4153-834a-e5235d327564" class="code"><code>// src/OptimizeTest.js
+// App.js에 OptimizeTest 컴포넌트 추가 
+import React, { useState, useEffect } from &quot;react&quot;;
+
+// text가 변경될때만 리렌더링
+const Textview = React.memo(({ text }) =&gt; {
+  return &lt;div&gt;{text}&lt;/div&gt;;
+});
+
+// count가 변경될때만 리렌더링
+const Countview = React.memo(({ count }) =&gt; {
+  return &lt;div&gt;{count}&lt;/div&gt;;
+});
+
+const OptimizeTest = () =&gt; {
+  const [count, setCount] = useState(1);
+  const [text, setText] = useState(&quot;&quot;);
+  return (
+    &lt;div style={{ padding: 50 }}&gt;
+      &lt;div&gt;
+        &lt;h2&gt;Count&lt;/h2&gt;
+        &lt;Countview count={count} /&gt;
+        &lt;button onClick={() =&gt; setCount(count + 1)}&gt;+&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;h2&gt;Text&lt;/h2&gt;
+        &lt;Textview text={text} /&gt;
+        &lt;input value={text} onChange={(event) =&gt; setText(event.target.value)} /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default OptimizeTest;</code></pre><p id="4c259e14-b5ea-4657-93e2-5b1080ef87df" class="">
+</p><p id="31216091-de98-45f8-9318-7940f7858bc2" class="">! Lesson 11. 최적화 3 - 컴포넌트 &amp; 함수 재사용하기 : useCallback</p><ul id="61a09b8b-a5ca-492b-bcc8-9dddb834b4dc" class="bulleted-list"><li style="list-style-type:disc">React 공식문서 참고</li></ul><figure id="f124d9b2-0dd0-407d-acf2-8647c3edba20"><a href="https://ko.legacy.reactjs.org/docs/hooks-reference.html#usecallback" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Hooks API Reference – React</div><div class="bookmark-description">A JavaScript library for building user interfaces</div></div><div class="bookmark-href"><img src="https://ko.legacy.reactjs.org/icons/icon-512x512.png?v=f4d46f030265b4c48a05c999b8d93791" class="icon bookmark-icon"/>https://ko.legacy.reactjs.org/docs/hooks-reference.html#usecallback</div></div><img src="https://legacy.reactjs.org/logo-og.png" class="bookmark-image"/></a></figure><p id="58b24dc9-b62f-4cb3-adc6-781b001ebb55" class="">
+</p><pre id="9672e32d-9469-458e-8fd5-c6d7eb882540" class="code"><code>// src/App.js
+// onCreate 함수에 useCallback 사용
+// 함수형 update로 최신화 : 추가 조사 
+import &quot;./App.css&quot;;
+import { useState, useRef, useEffect, useMemo, useCallback } from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+import OptimizeTest from &quot;./OptimizeText&quot;;
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  const [data, setData] = useState([]);
+  const dataId = useRef(1);
+  const getData = async () =&gt; {
+    // fetch 이후 json으로 변환
+    const res = await fetch(
+      &quot;https://jsonplaceholder.typicode.com/comments&quot;
+    ).then((res) =&gt; res.json());
+
+    const initData = res.slice(0, 20).map((iter) =&gt; {
+      return {
+        author: iter.email,
+        content: iter.body,
+        // 1~5 사이의 랜덤한 숫자 부여
+        emotion: Math.floor(Math.random() * 5) + 1,
+        created_date: new Date().getTime(),
+        id: dataId.current++,
+      };
+    });
+
+    setData(initData);
+  };
+
+  // Mount하는 시점에 실행하는 코드
+  useEffect(() =&gt; {
+    getData();
+  }, []);
+
+  const onCreate = useCallback((author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dataId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+    dataId.current += 1;
+    // 함수형 update : 추가 조사하기
+    setData((data)=&gt;[newItem, ...data]);
+  }, []);
+
+  const onRemove = (targetId) =&gt; {
+    const newDiaryList = data.filter((iter) =&gt; iter.id !== targetId);
+    setData(newDiaryList);
+  };
+
+  const onEdit = (targetId, newContent) =&gt; {
+    setData(
+      data.map((iter) =&gt;
+        iter.id === targetId ? { ...iter, content: newContent } : iter
+      )
+    );
+  };
+
+  // data.length가 변화할때만 연산 수행
+  // 값을 리턴받기 때문에 함수가 아님
+  // 값으로 사용해야한다.
+  const getDiaryAnalysis = useMemo(() =&gt; {
+    const goodCount = data.filter((iter) =&gt; iter.emotion &gt;= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+    return { goodCount, badCount, goodRatio };
+  }, [data.length]);
+
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
+
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;OptimizeTest /&gt;
+      &lt;DiaryEditor onCreate={onCreate} /&gt;
+      &lt;div&gt;전체 일기 : {data.length}&lt;/div&gt;
+      &lt;div&gt;기분 좋은 일기 개수 : {goodCount}&lt;/div&gt;
+      &lt;div&gt;기분 나쁜 일기 개수 : {badCount}&lt;/div&gt;
+      &lt;div&gt;기분 좋은 일기 비율 : {goodRatio}&lt;/div&gt;
+      {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+      &lt;DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><pre id="adb19f0c-94b2-48b6-b5e4-31c685b9bc33" class="code"><code>// src/DiaryEditor.js
+// React.memo로 export
+// useCallback을 사용한 onCreate를 사용해서 최적화 목표 달성 
+import { useRef, useState, useEffect } from &quot;react&quot;;
+
+const DiaryEditor = ({ onCreate }) =&gt; {
+  const [state, setState] = useState({
+    author: &quot;&quot;,
+    content: &quot;&quot;,
+    emotion: 1,
+  });
+  // 정상적인 입력결과가 아닐 때 focus를 주는 기능 추가
+  const authorInput = useRef();
+  const contentInput = useRef();
+
+  const handleChangeState = (event) =&gt; {
+    setState({
+      // spread 연산자가 위에 위치해야한다.
+      ...state,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = () =&gt; {
+    if (state.author.length &lt; 1) {
+      // focus -&gt; useRef 사용
+      authorInput.current.focus();
+      return;
+    }
+    if (state.content.length &lt; 5) {
+      // focus -&gt; useRef 사용
+      contentInput.current.focus();
+      return;
+    }
+    onCreate(state.author, state.content, state.emotion);
+    alert(&quot;저장 완료&quot;);
+    setState({ author: &quot;&quot;, content: &quot;&quot;, emotion: 1 });
+  };
+  return (
+    &lt;div className=&quot;DiaryEditor&quot;&gt;
+      &lt;h2&gt;오늘의 일기&lt;/h2&gt;
+      &lt;div&gt;
+        &lt;input
+          // name
+          // value
+          // onChange
+          ref={authorInput}
+          name=&quot;author&quot;
+          value={state.author}
+          onChange={handleChangeState}
+        /&gt;
+        &lt;div&gt;
+          &lt;textarea
+            //name
+            // value
+            // onChange
+            ref={contentInput}
+            name=&quot;content&quot;
+            value={state.content}
+            onChange={handleChangeState}
+          /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;select
+            // name
+            // value
+            // onChange
+            name=&quot;emotion&quot;
+            value={state.emotion}
+            onChange={handleChangeState}
+          &gt;
+            &lt;option value={1}&gt;1&lt;/option&gt;
+            &lt;option value={2}&gt;2&lt;/option&gt;
+            &lt;option value={3}&gt;3&lt;/option&gt;
+            &lt;option value={4}&gt;4&lt;/option&gt;
+            &lt;option value={5}&gt;5&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;button onClick={handleSubmit}&gt;일기 저장하기&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default React.memo(DiaryEditor);</code></pre><p id="95a64cc5-af7c-49b2-a58e-fbbe82260bcb" class="">
+! Lesson 12. 최적화 완료</p><p id="e26d4e57-e4bf-4d0b-88b6-2c4672382e90" class="">
+</p><pre id="5991acc4-0b5b-40a5-b648-f83b34644af1" class="code"><code>// src/App.js
+// onRemove, onEdit 최적화
+import &quot;./App.css&quot;;
+import { useState, useRef, useEffect, useMemo, useCallback } from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+import OptimizeTest from &quot;./OptimizeText&quot;;
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  const [data, setData] = useState([]);
+  const dataId = useRef(1);
+  const getData = async () =&gt; {
+    // fetch 이후 json으로 변환
+    const res = await fetch(
+      &quot;https://jsonplaceholder.typicode.com/comments&quot;
+    ).then((res) =&gt; res.json());
+
+    const initData = res.slice(0, 20).map((iter) =&gt; {
+      return {
+        author: iter.email,
+        content: iter.body,
+        // 1~5 사이의 랜덤한 숫자 부여
+        emotion: Math.floor(Math.random() * 5) + 1,
+        created_date: new Date().getTime(),
+        id: dataId.current++,
+      };
+    });
+
+    setData(initData);
+  };
+
+  // Mount하는 시점에 실행하는 코드
+  useEffect(() =&gt; {
+    getData();
+  }, []);
+
+  const onCreate = useCallback((author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dataId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+    dataId.current += 1;
+    // 함수형 업데이트
+    setData((data) =&gt; [newItem, ...data]);
+  }, []);
+
+  const onRemove = useCallback((targetId) =&gt; {
+    const newDiaryList = data.filter((iter) =&gt; iter.id !== targetId);
+    // 함수형 업데이트
+    setData((data) =&gt; newDiaryList);
+  }, []);
+
+  const onEdit = useCallback((targetId, newContent) =&gt; {
+    // 함수형 업데이트
+    setData((data) =&gt;
+      data.map((iter) =&gt;
+        iter.id === targetId ? { ...iter, content: newContent } : iter
+      )
+    );
+  }, []);
+
+  // data.length가 변화할때만 연산 수행
+  // 값을 리턴받기 때문에 함수가 아님
+  // 값으로 사용해야한다.
+  const getDiaryAnalysis = useMemo(() =&gt; {
+    const goodCount = data.filter((iter) =&gt; iter.emotion &gt;= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+    return { goodCount, badCount, goodRatio };
+  }, [data.length]);
+
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
+
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;OptimizeTest /&gt;
+      &lt;DiaryEditor onCreate={onCreate} /&gt;
+      &lt;div&gt;전체 일기 : {data.length}&lt;/div&gt;
+      &lt;div&gt;기분 좋은 일기 개수 : {goodCount}&lt;/div&gt;
+      &lt;div&gt;기분 나쁜 일기 개수 : {badCount}&lt;/div&gt;
+      &lt;div&gt;기분 좋은 일기 비율 : {goodRatio}&lt;/div&gt;
+      {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+      &lt;DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="ac2471d1-6de4-4e7a-b2bd-c8083d4fa7a4" class="">
+</p><pre id="f0d752ce-d76c-4b52-ab5c-45c6a9d4f337" class="code"><code>// src/DiaryItem.js
+// React.memo로 export
+import React, { useState, useRef } from &quot;react&quot;;
+
+const DiaryItem = ({
+  onEdit,
+  onRemove,
+  author,
+  content,
+  created_date,
+  emotion,
+  id,
+}) =&gt; {
+  const handleRemove = () =&gt; {
+    console.log(id);
+    if (window.confirm(`${id}번째 일기를 정말 삭제하겠습니까?`)) {
+      onRemove(id);
+    }
+  };
+
+  const handleQuitEdit = () =&gt; {
+    setIsEdit(false);
+    setLocalContent(content);
+  };
+
+  const handleEdit = () =&gt; {
+    if (content.length &lt; 5) {
+      localContentInput.current.focus();
+    }
+    if (window.confirm(`${id}번째 일기를 수정하시겠습니까?`)) {
+      onEdit(id, localContent);
+    }
+    toggleIsEdit(isEdit);
+  };
+
+  const localContentInput = useRef();
+  const [localContent, setLocalContent] = useState(content);
+  const [isEdit, setIsEdit] = useState(false);
+  const toggleIsEdit = () =&gt; setIsEdit(!isEdit);
+
+  return (
+    &lt;div className=&quot;DiaryItem&quot;&gt;
+      &lt;div className=&quot;info&quot;&gt;
+        &lt;span&gt;
+          작성자: {author} | 감정점수 : {emotion}
+        &lt;/span&gt;
+        &lt;br /&gt;
+        &lt;span className=&quot;date&quot;&gt;
+          {/* ms 시간을 전달하여 Date객체를 만들어 
+            사람이 보기 편한 시간으로 변환 */}
+          {new Date(created_date).toLocaleString()}
+        &lt;/span&gt;
+      &lt;/div&gt;
+      &lt;div className=&quot;content&quot;&gt;
+        {isEdit ? (
+          &lt;&gt;
+            &lt;textarea
+              ref={localContentInput}
+              value={localContent}
+              onChange={(event) =&gt; setLocalContent(event.target.value)}
+            /&gt;
+          &lt;/&gt;
+        ) : (
+          &lt;&gt;{content}&lt;/&gt;
+        )}
+      &lt;/div&gt;
+      {isEdit ? (
+        &lt;&gt;
+          &lt;button onClick={handleQuitEdit}&gt;수정취소&lt;/button&gt;
+          &lt;button onClick={handleEdit}&gt;수정완료&lt;/button&gt;
+        &lt;/&gt;
+      ) : (
+        &lt;&gt;
+          &lt;button onClick={handleRemove}&gt;삭제하기&lt;/button&gt;
+          &lt;button onClick={toggleIsEdit}&gt;수정하기&lt;/button&gt;
+        &lt;/&gt;
+      )}
+    &lt;/div&gt;
+  );
+};
+
+export default React.memo(DiaryItem);</code></pre><p id="5a50e155-3639-48ee-8b46-1afcefb73883" class="">
+</p><p id="ec70f4c1-5a56-4b49-a467-f5e966df0051" class="">! Lesson 13. 복잡한 상태변화 로직 분리 : useReducer</p><figure id="41845c01-638e-42bf-868a-d85d2b4c7de3" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2053.png"><img style="width:2183px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2053.png"/></a></figure><p id="b9e3875e-34fc-42c5-b958-ee8d83a571ef" class="">
+</p><figure id="a833fc2c-e580-4a88-b63b-aac0f07e729b" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2054.png"><img style="width:2074px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2054.png"/></a></figure><p id="08dfdb30-9c45-40c2-bc70-95a6d75695de" class="">
+</p><pre id="87603a4a-61f4-42a9-8374-d2f090c2b831" class="code"><code>// src/App.js
+// useState대신 useReducer로 상태 변화 관리
+import &quot;./App.css&quot;;
+import { useRef, useEffect, useMemo, useCallback, useReducer } from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+import OptimizeTest from &quot;./OptimizeText&quot;;
+
+const reducer = (state, action) =&gt; {
+  switch (action.type) {
+    case &quot;INIT&quot;:
+      return action.data;
+    case &quot;CREATE&quot;:
+      const created_date = new Date().getTime();
+      const newItem = { ...action.data, created_date };
+      return [newItem, ...state];
+    case &quot;REMOVE&quot;:
+      return state.filter((iter) =&gt; iter.id !== action.targetId);
+    case &quot;EDIT&quot;:
+      return state.map((iter) =&gt;
+        iter.id === action.targetId
+          ? { ...iter, content: action.newContent }
+          : iter
+      );
+    default:
+      return state;
+  }
+};
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  // const [data, setData] = useState([]);
+  // useReducer로 구현
+  const [data, dispatch] = useReducer(reducer, []);
+
+  const dataId = useRef(1);
+  const getData = async () =&gt; {
+    // fetch 이후 json으로 변환
+    const res = await fetch(
+      &quot;https://jsonplaceholder.typicode.com/comments&quot;
+    ).then((res) =&gt; res.json());
+
+    const initData = res.slice(0, 20).map((iter) =&gt; {
+      return {
+        author: iter.email,
+        content: iter.body,
+        // 1~5 사이의 랜덤한 숫자 부여
+        emotion: Math.floor(Math.random() * 5) + 1,
+        created_date: new Date().getTime(),
+        id: dataId.current++,
+      };
+    });
+    dispatch({ type: &quot;INIT&quot;, data: initData });
+    // setData(initData);
+  };
+
+  // Mount하는 시점에 실행하는 코드
+  useEffect(() =&gt; {
+    getData();
+  }, []);
+
+  const onCreate = useCallback((author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dataId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+
+    // 함수형 업데이트
+    // setData((data) =&gt; [newItem, ...data]);
+    dispatch({
+      type: &quot;CREATE&quot;,
+      data: { author, content, emotion, id: dataId.current },
+    });
+    dataId.current += 1;
+  }, []);
+
+  const onRemove = useCallback((targetId) =&gt; {
+    const newDiaryList = data.filter((iter) =&gt; iter.id !== targetId);
+    // 함수형 업데이트
+    // setData((data) =&gt; newDiaryList);
+    dispatch({ type: &quot;REMOVE&quot;, targetId });
+  }, []);
+
+  const onEdit = useCallback((targetId, newContent) =&gt; {
+    // 함수형 업데이트
+    // setData((data) =&gt;
+    //   data.map((iter) =&gt;
+    //     iter.id === targetId ? { ...iter, content: newContent } : iter
+    //   )
+    // );
+    dispatch({ type: &quot;EDIT&quot;, targetId, newContent });
+  }, []);
+
+  // data.length가 변화할때만 연산 수행
+  // 값을 리턴받기 때문에 함수가 아님
+  // 값으로 사용해야한다.
+  const getDiaryAnalysis = useMemo(() =&gt; {
+    const goodCount = data.filter((iter) =&gt; iter.emotion &gt;= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+    return { goodCount, badCount, goodRatio };
+  }, [data.length]);
+
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
+
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;OptimizeTest /&gt;
+      &lt;DiaryEditor onCreate={onCreate} /&gt;
+      &lt;div&gt;전체 일기 : {data.length}&lt;/div&gt;
+      &lt;div&gt;기분 좋은 일기 개수 : {goodCount}&lt;/div&gt;
+      &lt;div&gt;기분 나쁜 일기 개수 : {badCount}&lt;/div&gt;
+      &lt;div&gt;기분 좋은 일기 비율 : {goodRatio}&lt;/div&gt;
+      {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+      &lt;DiaryList diaryList={data} onRemove={onRemove} onEdit={onEdit} /&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="1b7c254f-0a9a-45a6-b9cd-0d1cdebab166" class="">
+</p><p id="ed8c7ed0-0a67-43a2-a3f9-f63de639b26c" class="">! Lesson 14. 컴포넌트 트리에 데이터 공급 : Context API</p><figure id="097fd870-6445-422b-a6ec-b271d86015af" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2055.png"><img style="width:2304px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2055.png"/></a></figure><p id="06bd5a75-aa9f-471c-be6e-fbdf68f4744b" class="">
+</p><figure id="e21d2293-cf69-4289-886d-ba4e302e177a" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2056.png"><img style="width:2077px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2056.png"/></a></figure><p id="d8b239b4-9c39-4d7a-9799-e24d2f1aaa66" class="">
+</p><figure id="df970e12-5f4d-4617-a1e8-a101cbecd70c" class="image"><a href="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2057.png"><img style="width:2076px" src="%E1%84%92%E1%85%A1%E1%86%AB%E1%84%8B%E1%85%B5%E1%86%B8%20%E1%84%8F%E1%85%B3%E1%84%80%E1%85%B5%E1%84%85%E1%85%A9%20%E1%84%8C%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A1%20%E1%84%86%E1%85%A5%E1%86%A8%E1%84%82%E1%85%B3%E1%86%AB%20%E1%84%85%E1%85%B5%E1%84%8B%E1%85%A2%E1%86%A8%E1%84%90%E1%85%B3(React%20js)%2057f2d1c69de744078b2f3c88a8c0991b/Untitled%2057.png"/></a></figure><p id="dea50ee9-e6fb-4aa9-ba17-1adb3f9e63fe" class="">
+</p><pre id="74231453-2388-487b-807c-ed7ed11def4b" class="code"><code>// src/App.js
+// Context API를 이용하여 data, onCreate, onRemove, onEdit 전달하기 
+// memoizedDispatches 변수를 통해 함수 전달 
+import &quot;./App.css&quot;;
+import React, {
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+  useReducer,
+} from &quot;react&quot;;
+import DiaryEditor from &quot;./DiaryEditor&quot;;
+import DiaryList from &quot;./DiaryList&quot;;
+import OptimizeTest from &quot;./OptimizeText&quot;;
+
+const reducer = (state, action) =&gt; {
+  switch (action.type) {
+    case &quot;INIT&quot;:
+      return action.data;
+    case &quot;CREATE&quot;:
+      const created_date = new Date().getTime();
+      const newItem = { ...action.data, created_date };
+      return [newItem, ...state];
+    case &quot;REMOVE&quot;:
+      return state.filter((iter) =&gt; iter.id !== action.targetId);
+    case &quot;EDIT&quot;:
+      return state.map((iter) =&gt;
+        iter.id === action.targetId
+          ? { ...iter, content: action.newContent }
+          : iter
+      );
+    default:
+      return state;
+  }
+};
+
+// export 붙여서 선언하기
+export const DiaryStateContext = React.createContext();
+export const DiaryDispatchContext = React.createContext();
+
+function App() {
+  // 일기 데이터를 배열로 저장
+  // const [data, setData] = useState([]);
+  // useReducer로 구현
+  const [data, dispatch] = useReducer(reducer, []);
+
+  const dataId = useRef(1);
+  const getData = async () =&gt; {
+    // fetch 이후 json으로 변환
+    const res = await fetch(
+      &quot;https://jsonplaceholder.typicode.com/comments&quot;
+    ).then((res) =&gt; res.json());
+
+    const initData = res.slice(0, 20).map((iter) =&gt; {
+      return {
+        author: iter.email,
+        content: iter.body,
+        // 1~5 사이의 랜덤한 숫자 부여
+        emotion: Math.floor(Math.random() * 5) + 1,
+        created_date: new Date().getTime(),
+        id: dataId.current++,
+      };
+    });
+    dispatch({ type: &quot;INIT&quot;, data: initData });
+    // setData(initData);
+  };
+
+  // Mount하는 시점에 실행하는 코드
+  useEffect(() =&gt; {
+    getData();
+  }, []);
+
+  const onCreate = useCallback((author, content, emotion) =&gt; {
+    const created_date = new Date().getTime();
+    const newItem = {
+      id: dataId.current,
+      author,
+      content,
+      emotion,
+      created_date,
+    };
+
+    // 함수형 업데이트
+    // setData((data) =&gt; [newItem, ...data]);
+    dispatch({
+      type: &quot;CREATE&quot;,
+      data: { author, content, emotion, id: dataId.current },
+    });
+    dataId.current += 1;
+  }, []);
+
+  const onRemove = useCallback((targetId) =&gt; {
+    const newDiaryList = data.filter((iter) =&gt; iter.id !== targetId);
+    // 함수형 업데이트
+    // setData((data) =&gt; newDiaryList);
+    dispatch({ type: &quot;REMOVE&quot;, targetId });
+  }, []);
+
+  const onEdit = useCallback((targetId, newContent) =&gt; {
+    // 함수형 업데이트
+    // setData((data) =&gt;
+    //   data.map((iter) =&gt;
+    //     iter.id === targetId ? { ...iter, content: newContent } : iter
+    //   )
+    // );
+    dispatch({ type: &quot;EDIT&quot;, targetId, newContent });
+  }, []);
+
+  // data.length가 변화할때만 연산 수행
+  // 값을 리턴받기 때문에 함수가 아님
+  // 값으로 사용해야한다.
+  const getDiaryAnalysis = useMemo(() =&gt; {
+    const goodCount = data.filter((iter) =&gt; iter.emotion &gt;= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100;
+    return { goodCount, badCount, goodRatio };
+  }, [data.length]);
+
+  const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
+
+  // 재생성되지 않게 객체를 묶는 기법 
+  const memoizedDispatches = useMemo(() =&gt; {
+    return { onCreate, onRemove, onEdit };
+  }, []);
+
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;DiaryStateContext.Provider value={data}&gt;
+        &lt;DiaryDispatchContext value={memoizedDispatches}&gt;
+          &lt;OptimizeTest /&gt;
+          &lt;DiaryEditor onCreate={onCreate} /&gt;
+          &lt;div&gt;전체 일기 : {data.length}&lt;/div&gt;
+          &lt;div&gt;기분 좋은 일기 개수 : {goodCount}&lt;/div&gt;
+          &lt;div&gt;기분 나쁜 일기 개수 : {badCount}&lt;/div&gt;
+          &lt;div&gt;기분 좋은 일기 비율 : {goodRatio}&lt;/div&gt;
+          {/* App의 Data가 바뀌면 자식 Component도 리렌더링 */}
+          &lt;DiaryList onRemove={onRemove} onEdit={onEdit} /&gt;
+        &lt;/DiaryDispatchContext&gt;
+      &lt;/DiaryStateContext.Provider&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;</code></pre><p id="c7543266-0ebe-4cd5-b861-27289146f3a8" class="">
+</p><pre id="2934c5e1-d68d-44f2-94c8-9f9491481d64" class="code"><code>// src/DiaryEditor.js
+// ContextProvider를 통해 onCreate 함수를 전달받는다.
+import React, { useRef, useState, useEffect, useContext } from &quot;react&quot;;
+import { DiaryDispatchContext } from &quot;./App&quot;;
+
+const DiaryEditor = () =&gt; {
+  // 구조분해할당으로 받아야 한다.
+  const { onCreate } = useContext(DiaryDispatchContext);
+
+  const [state, setState] = useState({
+    author: &quot;&quot;,
+    content: &quot;&quot;,
+    emotion: 1,
+  });
+  // 정상적인 입력결과가 아닐 때 focus를 주는 기능 추가
+  const authorInput = useRef();
+  const contentInput = useRef();
+
+  const handleChangeState = (event) =&gt; {
+    setState({
+      // spread 연산자가 위에 위치해야한다.
+      ...state,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmit = () =&gt; {
+    if (state.author.length &lt; 1) {
+      // focus -&gt; useRef 사용
+      authorInput.current.focus();
+      return;
+    }
+    if (state.content.length &lt; 5) {
+      // focus -&gt; useRef 사용
+      contentInput.current.focus();
+      return;
+    }
+    onCreate(state.author, state.content, state.emotion);
+    alert(&quot;저장 완료&quot;);
+    setState({ author: &quot;&quot;, content: &quot;&quot;, emotion: 1 });
+  };
+  return (
+    &lt;div className=&quot;DiaryEditor&quot;&gt;
+      &lt;h2&gt;오늘의 일기&lt;/h2&gt;
+      &lt;div&gt;
+        &lt;input
+          // name
+          // value
+          // onChange
+          ref={authorInput}
+          name=&quot;author&quot;
+          value={state.author}
+          onChange={handleChangeState}
+        /&gt;
+        &lt;div&gt;
+          &lt;textarea
+            //name
+            // value
+            // onChange
+            ref={contentInput}
+            name=&quot;content&quot;
+            value={state.content}
+            onChange={handleChangeState}
+          /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;select
+            // name
+            // value
+            // onChange
+            name=&quot;emotion&quot;
+            value={state.emotion}
+            onChange={handleChangeState}
+          &gt;
+            &lt;option value={1}&gt;1&lt;/option&gt;
+            &lt;option value={2}&gt;2&lt;/option&gt;
+            &lt;option value={3}&gt;3&lt;/option&gt;
+            &lt;option value={4}&gt;4&lt;/option&gt;
+            &lt;option value={5}&gt;5&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;button onClick={handleSubmit}&gt;일기 저장하기&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default React.memo(DiaryEditor);</code></pre><p id="09d12f96-15a9-4d4a-bdef-5720f9445e68" class="">
+</p><pre id="5a01ec57-cc3b-4b87-851c-5feae71ece8c" class="code"><code>// src/DiaryList.js
+// ContextProvider를 통해 data, onRemove, onEdit을 전달받는다.
+import DiaryItem from &quot;./DiaryItem&quot;;
+import { useContext } from &quot;react&quot;;
+import { DiaryDispatchContext, DiaryStateContext } from &quot;./App&quot;;
+
+// Array를 props로 전달받을 때는 중괄호로 감싸야 한다.
+const DiaryList = () =&gt; {
+  const { onRemove, onEdit } = useContext(DiaryDispatchContext);
+  const diaryList = useContext(DiaryStateContext);
+
+  return (
+    &lt;div className=&quot;DiaryList&quot;&gt;
+      &lt;h2&gt;일기 리스트&lt;/h2&gt;
+      &lt;h4&gt;{diaryList.length}개의 일기가 있습니다.&lt;/h4&gt;
+      &lt;div&gt;
+        {/* map 내장함수를 이용하여 리스트 형태로 렌더링 */}
+        {/* map은 화살표 함수 사용 시 중괄호 대신 소괄호 사용.. why? */}
+        {diaryList.map((iter) =&gt; (
+          &lt;DiaryItem
+            key={iter.id}
+            {...iter}
+            onRemove={onRemove}
+            onEdit={onEdit}
+          /&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+// Default Props 설정
+DiaryList.defaultProps = {
+  diaryList: [],
+};
+
+export default DiaryList;</code></pre></div></article></body></html>
